@@ -35,22 +35,42 @@ function SignUp() {
 
       <div className="mb-3">
         <label>First name</label>
-        <input type="text" className="form-control" placeholder="First name" onChange={(e) => setFname(e.target.value)} required />
+        <input 
+          type="text" 
+          className="form-control" 
+          placeholder="First name" 
+          onChange={(e) => setFname(e.target.value)} required 
+        />
       </div>
 
       <div className="mb-3">
         <label>Last name</label>
-        <input type="text" className="form-control" placeholder="Last name" onChange={(e) => setLname(e.target.value)} />
+        <input 
+          type="text" 
+          className="form-control" 
+          placeholder="Last name" 
+          onChange={(e) => setLname(e.target.value)} 
+        />
       </div>
 
       <div className="mb-3">
         <label>Email address</label>
-        <input type="email" className="form-control" placeholder="Enter email" onChange={(e) => setEmail(e.target.value)} required />
+        <input 
+          type="email" 
+          className="form-control" 
+          placeholder="Enter email" 
+          onChange={(e) => setEmail(e.target.value)} required 
+        />
       </div>
 
       <div className="mb-3">
         <label>Password</label>
-        <input type="password" className="form-control" placeholder="Enter password" onChange={(e) => setPassword(e.target.value)} required />
+        <input 
+          type="password" 
+          className="form-control" 
+          placeholder="Enter password" 
+          onChange={(e) => setPassword(e.target.value)} required 
+        />
       </div>
 
       <div className="d-grid">

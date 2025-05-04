@@ -7,6 +7,7 @@ import '../styles/Navbar.css';
 import { auth } from '@/lib/firebase';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 
+
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
@@ -63,7 +64,7 @@ export default function Navbar() {
         <button className="close-button" onClick={() => setOpen(false)}>✖</button>
         <nav className="nav-links">
           <Link href="/">Home</Link>
-          <Link href="/about">About</Link>
+          <Link href="/About">About</Link>
           <Link href="/how-it-works">How it works</Link>
           <Link href="/get-started">Get started</Link>
           <Link href="/past-programs">Past programs</Link>

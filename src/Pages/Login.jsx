@@ -1,68 +1,91 @@
 import React, { useEffect, useState } from "react";
 import { auth, db } from "../lib/firebase"; // ✅ Correct path
 import { doc, getDoc } from "firebase/firestore";
+import Link from "next/link";
 
 function Login() {
   const [userDetails, setUserDetails] = useState(null);
+  const [loading, setLoading] = useState(true); // NEW
 
-  const fetchUserData = async () => {
-    auth.onAuthStateChanged(async (user) => {
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
       if (user) {
         try {
           const docRef = doc(db, "Users", user.uid);
           const docSnap = await getDoc(docRef);
           if (docSnap.exists()) {
             setUserDetails(docSnap.data());
-          } else {
+          } 
+          else {
             console.log("No user data found in Firestore.");
           }
-        } catch (error) {
+        } 
+        catch (error) {
           console.error("Error fetching user data:", error.message);
         }
       } else {
         console.log("No user is logged in.");
       }
+      setLoading(false); // ✅ important to stop showing "Loading..."
     });
-  };
 
-  useEffect(() => {
-    fetchUserData();
+    return () => unsubscribe();
   }, []);
 
-  async function handleLogout() {
-    try {
-      await auth.signOut();
-      window.location.href = "/login"; // or use react-router's useNavigate
-    } catch (error) {
-      console.error("Error logging out:", error.message);
-    }
-  }
+  // if (loading) return <p>Loading...</p>;
+  // if (!userDetails) return <p>No user logged in. Please log in.</p>;
 
   return (
     <div>
-      {userDetails ? (
-        <>
-          <div style={{ display: "flex", justifyContent: "center" }}>
-            <img
-              src={userDetails.photo || "https://via.placeholder.com/150"} // fallback photo
-              width={"40%"}
-              style={{ borderRadius: "50%" }}
-              alt="User"
-            />
-          </div>
-          <h3>Welcome {userDetails.firstName} 🙏</h3>
-          <div>
-            <p>Email: {userDetails.email}</p>
-            <p>First Name: {userDetails.firstName}</p>
-            {/* <p>Last Name: {userDetails.lastName}</p> */}
-          </div>
-          <button className="btn btn-primary" onClick={handleLogout}>
-            Logout
-          </button>
-        </>
-      ) : (
+      {loading ? (
         <p>Loading...</p>
+      ) : userDetails ? (
+        <div>
+          <h1>Welcome, {userDetails.firstName}!</h1>
+          <p>Email: {userDetails.email}</p>
+          <p>Last Name: {userDetails.lastName}</p>
+        </div>
+      ) : (
+        <p>No user logged in. Please log in.</p>
       )}
+      <h2>Login Page</h2>
+      <form>
+        <div className="mb-3">
+          <label>Email address</label>
+          <input
+            type="email"
+            className="form-control"
+            placeholder="Email address"
+            required
+          />
+        </div>
+
+        <div className="mb-3">
+          <label>Password</label>
+          <input
+            type="password"
+            className="form-control"
+            placeholder="Password"
+            required
+          />
+        </div>
+
+        <button type="submit" className="btn btn-primary">
+          Login
+        </button>
+      </form>
+
+      <p className="forgot-password text-right">
+        Don't have an account? <Link href="/signup">Sign Up</Link>
+      </p>
+
+      <p className="forgot-password text-right">
+        Forgot password? <a href="/reset-password">Reset Password</a>
+      </p>
+
+      <p className="forgot-password text-right">
+        <a href="/">Go to Home</a>
+      </p>
     </div>
   );
 }
