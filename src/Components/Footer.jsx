@@ -1,11 +1,13 @@
-import React from 'react'
+import React from 'react';
+import '../styles/Footer.css';
 
-function Footer() {
+
+const Footer = () => {
   return (
-    <div>
-      
-    </div>
-  )
-}
+    <footer className="footer">
+      <p>&copy; {new Date().getFullYear()} SmartProperty Hub. All rights reserved.</p>
+    </footer>
+  );
+};
 
-export default Footer
+export default Footer;
