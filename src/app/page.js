@@ -8,7 +8,12 @@ export default function Home() {
   return (
     <div className='HomePage'>
       <Navbar />
-      <h1>HelloWorld</h1>
+
+      <div className="content">
+        <h1>HelloWorld</h1>
+        <h1>Welcome to SmartProperty Hub</h1>
+      </div>
+
       <Footer />
     </div>
   );

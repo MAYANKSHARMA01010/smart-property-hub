@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import "../styles/signup.css";
+import "../styles/globals.css";
+import "../styles/SignUp.css";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "../lib/firebase";
 import { setDoc, doc } from "firebase/firestore";
@@ -28,8 +29,16 @@ function SignUp() {
         });
         console.log("User data added to Firestore");
       }
-
       alert("User Registered Successfully!!");
+
+      // Clear form fields
+      setEmail("");
+      setFname("");
+      setLname("");
+      setPassword("");
+
+      // Redirect to login page
+      router.push("/login");
 
     } catch (error) {
       console.error("Registration Error:", error.message);

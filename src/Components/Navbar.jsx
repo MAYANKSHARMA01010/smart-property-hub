@@ -6,12 +6,13 @@ import '../styles/Navbar.css';
 
 import { auth } from '@/lib/firebase';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
-
+import { useRouter } from 'next/navigation';
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
   const [user, setUser] = useState(null);
+  const router = useRouter();
 
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
@@ -48,9 +49,7 @@ export default function Navbar() {
               <button className="login-button" onClick={handleLogout}>Logout</button>
             </>
           ) : (
-            <Link href="/login">
-              <button className="login-button">Login</button>
-            </Link>
+            <button className="login-button" onClick={() => router.push('/login')}>Login</button>
           )}
           <button className="dark-mode-button" onClick={toggleDarkMode}>
             {darkMode ? "☀️" : "🌙"}
