@@ -9,7 +9,7 @@ export default function Home() {
     <div className='HomePage'>
       <Navbar />
       <h1>HelloWorld</h1>
-      <Footer
+      <Footer />
     </div>
   );
 }
