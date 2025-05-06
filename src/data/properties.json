@@ -1,0 +1,35 @@
+[
+    {
+      "id": "1",
+      "title": "2BHK Apartment in Noida",
+      "city": "Noida",
+      "price": 2500000,
+      "image": "/images/property1.jpg",
+      "tags": ["Affordable", "New Construction"]
+    },
+    {
+      "id": "2",
+      "title": "1RK Studio in Delhi",
+      "city": "Delhi",
+      "price": 1500000,
+      "image": "/images/property2.jpg",
+      "tags": ["Budget", "Govt Scheme"]
+    },
+    {
+      "id": "3",
+      "title": "3BHK Flat in Gurugram",
+      "city": "Gurugram",
+      "price": 3700000,
+      "image": "/images/property3.jpg",
+      "tags": ["Luxury", "Near Metro"]
+    },
+    {
+      "id": "4",
+      "title": "1BHK Flat in Ghaziabad",
+      "city": "Ghaziabad",
+      "price": 1800000,
+      "image": "/images/property4.jpg",
+      "tags": ["Affordable", "Ready to Move"]
+    }
+  ]
+  
