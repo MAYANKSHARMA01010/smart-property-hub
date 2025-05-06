@@ -13,6 +13,8 @@
   /* Left side: Menu button and Title */
   .navbar-left {
     display: flex;
+    justify-content: center;
+    text-align: center;
     align-items: center;
     gap: 1rem;
   }
@@ -27,6 +29,7 @@
   .navbar-title {
     font-size: 1.2rem;
     font-weight: bold;
+    margin-bottom: 0;
   }
   
   /* Right side: Login & dark mode */
