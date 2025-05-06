@@ -31,17 +31,17 @@ export default function Home() {
       {/* Mini Calculator */}
       <section className="mini-calculator">
         <h2>Quick Calculator</h2>
-        <CalculatorForm isMini={true} />
+        {/* <CalculatorForm isMini={true} /> */}
       </section>
 
       {/* Trending Listings */}
       <section className="trending">
         <h2>Trending Properties</h2>
-        <div className="property-grid">
+        {/* <div className="property-grid">
           {trending.map((property) => (
-            <PropertyCard key={property.id} property={property} />
+            // <PropertyCard key={property.id} property={property} />
           ))}
-        </div>
+        </div> */}
         <button onClick={() => window.location.href = '/listings'}>
           View All Listings
         </button>
