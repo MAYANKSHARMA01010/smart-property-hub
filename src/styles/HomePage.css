@@ -1,134 +1,96 @@
-/* Reset Styles */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
-
-/* HomePage Styles */
-.HomePage {
+  
+  .HomePage {
     display: flex;
     flex-direction: column;
-    min-height: 100vh; /* Ensures the page takes up the full screen height */
+    min-height: 100vh;
     background-color: #ecf0f1;
-}
-
-/* Content Area */
-.content {
-    flex-grow: 1;
+  }
+  
+  .hero {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
     padding: 2rem;
-}
-
-/* Header */
-h1 {
-    text-align: center;
+  }
+  
+  .hero h1 {
     font-size: 3rem;
     color: #2c3e50;
     margin-top: 10px;
     margin-bottom: 20px;
-}
-
-/* Property Card Section */
-.property-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 20px;
-    padding: 0 20px;
-    width: 100%;
-}
-
-/* Property Card Styles */
-.property-card {
-    width: 300px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    background-color: #fff;
-    transition: transform 0.3s ease;
-}
-
-.property-card:hover {
-    transform: scale(1.05);
-}
-
-.property-card img {
-    width: 100%;
-    height: 180px;
-    object-fit: cover;
-    border-radius: 8px;
-}
-
-.property-card .details {
-    margin-top: 15px;
-}
-
-.property-card h3 {
-    font-size: 1.5rem;
-    margin-bottom: 10px;
-    color: #333;
-}
-
-.property-card .price {
+  }
+  
+  .hero p {
     font-size: 1.2rem;
-    color: #e74c3c;
-    font-weight: bold;
-}
-
-.property-card .location {
-    font-size: 1rem;
-    color: #7f8c8d;
-    margin-bottom: 15px;
-}
-
-.property-card .cta {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.property-card .cta button {
+    color: #34495e;
+  }
+  
+  .hero button,
+  .trending button {
     background-color: #3498db;
     color: white;
+    padding: 12px 24px;
     border: none;
-    padding: 10px 20px;
     border-radius: 5px;
+    font-size: 1rem;
     cursor: pointer;
     transition: background-color 0.3s ease;
-}
-
-.property-card .cta button:hover {
+    margin-top: 1rem;
+  }
+  
+  .hero button:hover,
+  .trending button:hover {
     background-color: #2980b9;
-}
-
-/* Call to Action Section */
-.cta-section {
-    display: flex;
-    justify-content: center;
-    margin-top: 50px;
-}
-
-.cta-section a {
-    background-color: #3498db;
-    color: white;
-    padding: 15px 30px;
-    border-radius: 5px;
-    text-decoration: none;
-    font-size: 1.2rem;
-}
-
-.cta-section a:hover {
-    background-color: #2980b9;
-}
-
-.hero {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+  }
+  
+  .mini-calculator {
+    padding: 2rem;
     text-align: center;
-}
+  }
+  
+  .trending {
+    padding: 2rem;
+    text-align: center;
+  }
+  
+  .trending h2 {
+    margin-bottom: 1rem;
+    color: #2c3e50;
+  }
+  
+  .property-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    padding: 20px 0;
+    width: 100%;
+  }
+  
+  .why-us {
+    padding: 2rem;
+    text-align: center;
+  }
+  
+  .why-us h2 {
+    margin-bottom: 1rem;
+    color: #2c3e50;
+  }
+  
+  .why-us ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .why-us li {
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+    color: #2c3e50;
+  }
+  

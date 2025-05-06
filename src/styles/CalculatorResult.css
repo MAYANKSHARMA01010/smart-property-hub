@@ -1,0 +1,30 @@
+.calculator-result {
+    width: 100%;
+    max-width: 400px;
+    margin: 30px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+  
+.calculator-result h3 {
+    font-size: 2rem;
+    color: #2c3e50;
+    margin-bottom: 15px;
+}
+  
+.calculator-result .restCost,
+.calculator-result .buyCost {
+    font-size: 1.1rem;
+    color: #333;
+    margin: 10px 0;
+}
+  
+.calculator-result .buyOrNot {
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: #e74c3c;
+    margin-top: 15px;
+}  
