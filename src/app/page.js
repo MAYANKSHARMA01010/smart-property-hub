@@ -25,13 +25,13 @@ export default function Home() {
         <h1>Welcome to SmartProperty Hub 🏠</h1>
         <p>Your one-stop solution to decide smartly: Rent or Buy?</p>
         <button onClick={() =>  router.push('/calculatorpage')}>Start Rent vs Buy Calculator</button>
-        <button onClick={() => router.push('/listings')}>Explore Listings</button>
+        {/* <button onClick={() => router.push('/listings')}>Explore Listings</button> */}
       </section>
 
       {/* Mini Calculator */}
       <section className="mini-calculator">
         <h2>Quick Calculator</h2>
-        {/* <CalculatorForm isMini={true} /> */}
+        <CalculatorForm isMini={true} />
       </section>
 
       {/* Trending Listings */}
