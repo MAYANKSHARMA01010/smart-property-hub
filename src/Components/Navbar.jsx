@@ -64,8 +64,6 @@ export default function Navbar() {
         <nav className="nav-links">
           <Link href="/">Home</Link>
           <Link href="/About">About</Link>
-          {/* <Link href="/how-it-works">How it works</Link>
-          <Link href="/get-started">Get started</Link> */}
           <Link href="/profile">Profile</Link>
         </nav>
       </aside>

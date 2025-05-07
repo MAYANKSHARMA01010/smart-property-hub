@@ -3,6 +3,8 @@ import '../styles/globals.css';
 import '../styles/CalculatorPage.css';
 import Footer from '@/components/Footer';
 import Navbar from '@/components/Navbar';
+import Image from 'next/image';
+import backgroundImage from '../../public/calculatorImg.png';
 
 function CalculatorPage() {
   const [propertyPrice, setPropertyPrice] = useState('');
@@ -45,9 +47,13 @@ function CalculatorPage() {
   };
 
   return (
-    <>
+    <div className="calculator-page">
       <div className='navbar'>
         <Navbar />
+      </div>
+      <div className='background-image'>
+        {/* <img src="../../public/calculatorImg.png" alt="Background" /> */}
+        <Image src={backgroundImage} alt="Background" layout="fill" objectFit="cover" />
       </div>
 
       <div className="calculator-container">
@@ -125,7 +131,7 @@ function CalculatorPage() {
       <div className="footer">
         <Footer />
       </div>
-    </>
+    </div>
   );
 }
 
