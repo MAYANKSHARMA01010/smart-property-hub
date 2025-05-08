@@ -63,7 +63,7 @@ export default function Navbar() {
         <button className="close-button" onClick={() => setOpen(false)}>✖</button>
         <nav className="nav-links">
           <Link href="/">Home</Link>
-          <Link href="/About">About</Link>
+          <Link href="/about">About</Link>
           <Link href="/profile">Profile</Link>
         </nav>
       </aside>

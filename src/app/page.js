@@ -6,6 +6,7 @@ import '../styles/globals.css';
 
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import ContactUs from '@/components/contactUs';
 import CalculatorForm from '@/components/CalculatorForm';
 import PropertyCard from '@/components/PropertyCard';
 
@@ -64,7 +65,8 @@ export default function Home() {
           </div>
         </div>
       </section>
-          
+      
+      <ContactUs />
       {/* Footer import */}
       <Footer />
     </div>

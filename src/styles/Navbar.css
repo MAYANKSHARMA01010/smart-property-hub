@@ -1,130 +1,125 @@
-/* Container for navbar */
 .navbar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 1rem 2rem;
-    background-color: #ffffff;
-    border-bottom: 1px solid #ddd;
-    position: relative;
-    z-index: 100;
-  }
-  
-  /* Left side: Menu button and Title */
-  .navbar-left {
-    display: flex;
-    justify-content: center;
-    text-align: center;
-    align-items: center;
-    gap: 1rem;
-  }
-  
-  .menu-button {
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    cursor: pointer;
-  }
-  
-  .navbar-title {
-    font-size: 1.2rem;
-    font-weight: bold;
-    margin-bottom: 0;
-  }
-  
-  /* Right side: Login & dark mode */
-  .navbar-right {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-  }
-  
-  .login-button,
-  .dark-mode-button {
-    padding: 0.5rem 1rem;
-    border: 1px solid #ccc;
-    background: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 0.9rem;
-  }
-  
-  /* Sidebar */
-  .sidebar {
-    position: fixed;
-    top: 0;
-    left: -250px;
-    width: 240px;
-    height: 100%;
-    background: #fff;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
-    padding: 2rem 1rem;
-    transition: left 0.3s ease-in-out;
-    z-index: 999;
-  }
-  
-  .sidebar.open {
-    left: 0;
-  }
-  
-  .close-button {
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    cursor: pointer;
-  }
-  
-  .nav-links {
-    margin-top: 3rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-  
-  .nav-links a {
-    text-decoration: none;
-    color: #333;
-    font-size: 1rem;
-  }
-  
-  /* Overlay behind sidebar */
-  .overlay {
-    display: none;
-  }
-  
-  .overlay.show {
-    display: block;
-    position: fixed;
-    inset: 0;
-    background-color: rgba(0, 0, 0, 0.3);
-    z-index: 998;
-  }
-  
-  /* Dark mode */
-  body.dark {
-    background-color: #121212;
-    color: #ffffff;
-  }
-  
-  body.dark .navbar {
-    background-color: #1e1e1e;
-    border-color: #333;
-  }
-  
-  body.dark .sidebar {
-    background-color: #1e1e1e;
-  }
-  
-  body.dark .nav-links a {
-    color: #ffffff;
-  }
-  
-  body.dark .login-button,
-  body.dark .dark-mode-button {
-    color: #fff;
-    border-color: #666;
-  }
-  
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: #fff;
+  border-bottom: 1px solid #ddd;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.navbar-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.menu-button {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.navbar-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #000;
+}
+
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.login-button,
+.dark-mode-button {
+  padding: 0.4rem 0.8rem;
+  border: 1px solid #ccc;
+  background: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: -250px;
+  width: 240px;
+  height: 100%;
+  background: #fff;
+  padding: 2rem 1rem;
+  transition: left 0.3s ease;
+  z-index: 999;
+}
+
+.sidebar.open {
+  left: 0;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  cursor: pointer;
+}
+
+.nav-links {
+  margin-top: 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #000;
+  font-size: 1rem;
+}
+
+.overlay {
+  display: none;
+}
+
+.overlay.show {
+  display: block;
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index: 998;
+}
+
+body.dark {
+  background-color: #121212;
+  color: #fff;
+}
+
+body.dark .navbar {
+  background-color: #1e1e1e;
+  border-color: #333;
+}
+
+body.dark .navbar-title {
+  color: #fff;
+}
+
+body.dark .sidebar {
+  background-color: #1e1e1e;
+}
+
+body.dark .nav-links a {
+  color: #fff;
+}
+
+body.dark .login-button,
+body.dark .dark-mode-button {
+  color: #fff;
+  border-color: #666;
+}
