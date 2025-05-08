@@ -1,15 +1,13 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import '../styles/Navbar.css';
 
 import { auth } from '@/lib/firebase';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
-import { useRouter } from 'next/navigation';
 
 export default function Navbar() {
-  const [open, setOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
   const [user, setUser] = useState(null);
   const router = useRouter();
@@ -36,37 +34,29 @@ export default function Navbar() {
   };
 
   return (
-    <>
-      <header className="navbar">
-        <div className="navbar-left">
-          <button className="menu-button" onClick={() => setOpen(true)}>☰</button>
-          <h1 className="navbar-title">SmartProperty Hub</h1>
-        </div>
-        <div className="navbar-right">
-          {user ? (
-            <>
-              <span className="user-info">{user.firstName}</span>
-              <button className="login-button" onClick={handleLogout}>Logout</button>
-            </>
-          ) : (
-            <button className="login-button" onClick={() => router.push('/login')}>Login</button>
-          )}
-          <button className="dark-mode-button" onClick={toggleDarkMode}>
-            {darkMode ? "☀️" : "🌙"}
-          </button>
-        </div>
-      </header>
+    <header className="navbar">
+      <div className="navbar-left">
+        <h1 className="navbar-title" onClick={() => router.push('/')}>
+          SmartProperty Hub
+        </h1>
+      </div>
+      <div className="navbar-right">
+        <button className="login-button navLinks" onClick={() => router.push('/')}>Home</button>
+        <button className="login-button navLinks" onClick={() => router.push('/about')}>About</button>
 
-      <div className={`overlay ${open ? 'show' : ''}`} onClick={() => setOpen(false)}></div>
+        {user ? (
+          <>
+            <button className="login-button navLinks" onClick={() => router.push('/profile')}>Profile</button>
+            <button className="login-button" onClick={handleLogout}>Logout</button>
+          </>
+        ) : (
+          <button className="login-button" onClick={() => router.push('/login')}>Login</button>
+        )}
 
-      <aside className={`sidebar ${open ? 'open' : ''}`}>
-        <button className="close-button" onClick={() => setOpen(false)}>✖</button>
-        <nav className="nav-links">
-          <Link href="/">Home</Link>
-          <Link href="/about">About</Link>
-          <Link href="/profile">Profile</Link>
-        </nav>
-      </aside>
-    </>
+        <button className="dark-mode-button" onClick={toggleDarkMode}>
+          {darkMode ? "☀️" : "🌙"}
+        </button>
+      </div>
+    </header>
   );
 }
