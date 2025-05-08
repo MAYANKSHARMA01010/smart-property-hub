@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import "../styles/globals.css";
 import '../styles/Navbar.css';
 
 import { auth } from '@/lib/firebase';
