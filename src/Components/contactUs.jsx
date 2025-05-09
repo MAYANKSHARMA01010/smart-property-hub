@@ -1,28 +1,46 @@
-import React from 'react'
-import '../styles/globals.css'
-import '../styles/contactUs.css'
+'use client';
 
-function contactUs() {
+import React from 'react';
+import '../styles/contactUs.css';
+import { FaUser, FaEnvelope, FaPhone, FaComment } from 'react-icons/fa';
+
+function ContactUs() {
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    alert('Message sent successfully!');
+  };
+
   return (
-    <div className='contactUs'>
-      <div className="contactUs-container">
-        <h1>Contact Us</h1>
-        <p>If you have any questions, feedback, or inquiries, feel free to reach out to us!</p>
-        <form className="contact-form">
-        <label htmlFor="name">Name:</label>
-        <input type="text" id="name" name="name" required />
-    
-        <label htmlFor="email">Email:</label>
-        <input type="email" id="email" name="email" required />
-    
-        <label htmlFor="message">Message:</label>
-        <textarea id="message" name="message" rows="4" required></textarea>
-    
-        <button type="submit">Send Message</button>
-        </form>
+    <div className="contactUs">
+      <div className="contactUs-wrapper">
+        <div className="contactUs-left">
+          <img src="/contact-illustration.svg" alt="Contact Illustration" />
+        </div>
+        <div className="contactUs-right">
+          <h1><span>🎧</span> Get <span className="highlight">In Touch</span></h1>
+          <form onSubmit={handleSubmit}>
+            <div className="input-group">
+              <FaUser className="icon" />
+              <input type="text" placeholder="Name" required />
+            </div>
+            <div className="input-group">
+              <FaEnvelope className="icon" />
+              <input type="email" placeholder="Email" required />
+            </div>
+            <div className="input-group">
+              <FaPhone className="icon" />
+              <input type="tel" placeholder="Phone" required />
+            </div>
+            <div className="input-group">
+              <FaComment className="icon" />
+              <textarea placeholder="Message" required></textarea>
+            </div>
+            <button type="submit" className="submit-btn">Submit 📩</button>
+          </form>
+        </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default contactUs
+export default ContactUs;

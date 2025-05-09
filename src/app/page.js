@@ -9,7 +9,7 @@ import Footer from '@/components/Footer';
 import ContactUs from '@/components/contactUs';
 import CalculatorForm from '@/components/CalculatorForm';
 import PropertyCard from '@/components/PropertyCard';
-
+import WhyUs from '@/components/why-us';
 import { useRouter } from 'next/navigation';
 import properties from '@/data/properties.json';
 
@@ -50,24 +50,8 @@ export default function Home() {
         </button>
       </section>
 
-      {/* khud ki tarif wala section */}
-      <section className="why-us">
-        <h2>Why SmartProperty Hub?</h2>
-        <div className='whyUsSections'>
-          <img src="/images/why-us.jpg" alt="Why Us" />
-          <div className='whyUsInfo'>
-            <ul>
-              <li>🔍 Discover verified affordable homes</li>
-              <li>📊 Compare Rent vs Buy instantly</li>
-              <li>💸 Save & shortlist your favorites</li>
-              <li>⚡ Fast, simple, student-friendly design</li>
-            </ul>
-          </div>
-        </div>
-      </section>
-      
+      <WhyUs />
       <ContactUs />
-      {/* Footer import */}
       <Footer />
     </div>
   );
