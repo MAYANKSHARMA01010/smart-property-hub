@@ -33,20 +33,18 @@ export default function Login() {
 
       if (userDocSnap.exists()) {
         alert("Login successful!");
-        router.push("/");
-      } 
-      else {
+        router.push("/profile");
+      } else {
         alert("User data not found in Firestore");
       }
 
-    } 
-    catch (error) {
+    } catch (error) {
       switch (error.code) {
         case "auth/too-many-requests":
-          alert("Too many failed attempts. Please try again later or reset your password.");
+          alert("Too many failed attempts. Please try again later.");
           break;
         case "auth/wrong-password":
-          alert("Incorrect password. Please try again.");
+          alert("Incorrect password.");
           break;
         case "auth/user-not-found":
           alert("No account found with this email.");
@@ -90,19 +88,13 @@ export default function Login() {
       <div className="login-links">
         <p>
           New user?{" "}
-          <a onClick={() => router.push("/signup")} className="login-link">
-            Register Here
-          </a>
+          <a onClick={() => router.push("/signup")} className="login-link">Register Here</a>
         </p>
         <p>
-          <a onClick={() => router.push("/forgot-password")} className="login-link">
-            Forgot Password?
-          </a>
+          <a onClick={() => router.push("/forgot-password")} className="login-link">Forgot Password?</a>
         </p>
         <p>
-          <a onClick={() => router.push("/")} className="login-link">
-            Go to Home
-          </a>
+          <a onClick={() => router.push("/")} className="login-link">Go to Home</a>
         </p>
       </div>
     </div>
