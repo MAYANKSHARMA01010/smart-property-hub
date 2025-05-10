@@ -72,25 +72,3 @@
     padding: 20px 0;
     width: 100%;
   }
-  
-  .why-us {
-    padding: 2rem;
-    text-align: center;
-  }
-  
-  .why-us h2 {
-    margin-bottom: 1rem;
-    color: #2c3e50;
-  }
-  
-  .why-us ul {
-    list-style: none;
-    padding: 0;
-  }
-  
-  .why-us li {
-    font-size: 1.1rem;
-    margin-bottom: 10px;
-    color: #2c3e50;
-  }
-  
