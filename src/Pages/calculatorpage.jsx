@@ -4,7 +4,6 @@ import '../styles/CalculatorPage.css';
 import Footer from '@/components/Footer';
 import Navbar from '@/components/Navbar';
 
-
 function CalculatorPage() {
   const [propertyPrice, setPropertyPrice] = useState('');
   const [downPayment, setDownPayment] = useState('');
@@ -47,19 +46,11 @@ function CalculatorPage() {
 
   return (
     <div className="calculator-page">
-
-      <div className='navbar'>
-        <Navbar />
-      </div>
-
-      <div className="background-video">
-        <video autoPlay loop muted playsInline>
-          <source src="/bgVideoCalculator.mp4" type="video/mp4" />
-        </video>
-      </div>
+      <Navbar />
 
       <div className="calculator-container">
         <h1>Rent vs Buy Calculator</h1>
+
         <form onSubmit={handleSubmit} className="calculator-form">
           <label>Property Price (₹):</label>
           <input
@@ -130,9 +121,7 @@ function CalculatorPage() {
         )}
       </div>
 
-      <div className="footer">
-        <Footer />
-      </div>
+      <Footer />
     </div>
   );
 }
