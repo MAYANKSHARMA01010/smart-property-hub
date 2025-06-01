@@ -35,10 +35,10 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
 
-## Ignored Files
+<!-- ## Ignored Files
 
 The following files/folders are excluded using `.gitignore` and are not pushed to the repository:
 
 - `node_modules/` – Dependency folder managed by npm/yarn.
 - `.env.local` – Environment variables for local development.
-- `.next/` – Next.js build output.
+- `.next/` – Next.js build output. -->
