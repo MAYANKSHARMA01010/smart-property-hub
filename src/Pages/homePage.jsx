@@ -65,7 +65,7 @@ export default function HomePage() {
           <div className="view-all">
             <button
               className="btn btn-secondary view-all-button"
-              onClick={() => router.push('/listings')}
+              onClick={() => router.push('/all-listing')}
             >
               View All Listings
             </button>

@@ -13,43 +13,31 @@ const tagsPool = [
   "Private Garden", "Eco-Friendly"
 ];
 
-const propertyTypes = ["Apartment", "Villa", "Studio", "Penthouse", "Row House", "Farmhouse", "Serviced Apartment"];
-const furnishingStatus = ["Furnished", "Semi-Furnished", "Unfurnished"];
-const availabilityStatus = ["Ready to Move", "Under Construction"];
+const propertyTypes = ["Apartment", "Studio", "Flat", "Villa"];
+const bedroomsOptions = ["1BHK", "2BHK", "3BHK", "4BHK", "1RK"]; // You can customize
 
 const getRandom = (arr) => arr[Math.floor(Math.random() * arr.length)];
-const getRandomTags = () => [...new Set(Array.from({ length: Math.floor(Math.random() * 3) + 3 }, () => getRandom(tagsPool)))];
+const getRandomTags = () => [...new Set(Array.from({ length: Math.floor(Math.random() * 10) + 1 }, () => getRandom(tagsPool)))];
 
 const properties = [];
 
-for (let i = 1; i <= 100; i++) {
+for (let i = 1; i <= 10000; i++) {
   const city = getRandom(cities);
   const propType = getRandom(propertyTypes);
-  const bedrooms = Math.floor(Math.random() * 5) + 1;
-  const bathrooms = Math.floor(Math.random() * bedrooms) + 1;
-  const area = Math.floor(Math.random() * 5500) + 500;
-  const price = area * (Math.floor(Math.random() * 5000) + 2000);
+  const bedrooms = getRandom(bedroomsOptions);
+  const price = Math.floor(Math.random() * 3000000) + 1000000; // price between 10L to 40L approx
   const tags = getRandomTags();
-  const yearBuilt = Math.floor(Math.random() * 20) + 2005;
   const imageIndex = (i % 10) + 1;
 
   properties.push({
     id: i.toString(),
-    title: `${bedrooms}BHK ${propType} in ${city}`,
+    title: `${bedrooms} ${propType} in ${city}`,
     city,
     price,
-    area_sqft: area,
-    bedrooms,
-    bathrooms,
-    furnishing: getRandom(furnishingStatus),
-    property_type: propType,
-    availability: getRandom(availabilityStatus),
-    year_built: yearBuilt,
-    rating: +(Math.random() * 2.5 + 2.5).toFixed(1),
     image: `/images/property${imageIndex}.jpg`,
     tags
   });
 }
 
 fs.writeFileSync("src/data/properties.json", JSON.stringify(properties, null, 2));
-console.log("✅ properties.json with diverse data generated successfully!");
+console.log("✅ properties.json generated successfully!");
