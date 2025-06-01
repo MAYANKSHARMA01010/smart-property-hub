@@ -2,7 +2,7 @@
 
 import React from 'react';
 import '../styles/globals.css';
-import HomePage from '@/pages/homePage';
+import HomePage from '../pages/homePage';
 
 export default function Home() {
   return (
