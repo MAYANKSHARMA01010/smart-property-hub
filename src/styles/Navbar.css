@@ -12,13 +12,13 @@
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-.navbar-left {
+.navbarLeft {
   display: flex;
   align-items: center;
   gap: 1rem;
 }
 
-.navbar-title {
+.navbarTitle {
   font-size: 1.5rem;
   font-weight: 700;
   color: #111;
@@ -27,17 +27,17 @@
   transition: color 0.3s ease;
 }
 
-.navbar-title:hover {
+.navbarTitle:hover {
   color: #0070f3;
 }
 
-.navbar-right {
+.navRight {
   display: flex;
   align-items: center;
   gap: 1rem;
 }
 
-.nav-link {
+.navLinks {
   padding: 0.5rem 1rem;
   background: none;
   border: none;
@@ -50,12 +50,12 @@
   user-select: none;
 }
 
-.nav-link:hover {
+.navLinks:hover {
   background-color: #e8f0fe;
   color: #0070f3;
 }
 
-.login-btn {
+.loginBtn {
   font-weight: 600;
   color: #fff;
   background-color: #0070f3;
@@ -63,22 +63,22 @@
   transition: box-shadow 0.3s ease;
 }
 
-.login-btn:hover {
+.loginBtn:hover {
   box-shadow: 0 6px 20px rgba(0,112,243,0.5);
   background-color: #005bb5;
 }
 
-.logout-btn {
+.logoutBtn {
   color: #e00;
   font-weight: 600;
 }
 
-.logout-btn:hover {
+.logoutBtn:hover {
   background-color: #fee;
   color: #c00;
 }
 
-.dark-mode-toggle {
+.darkModeToggle {
   font-size: 1.3rem;
   padding: 0.3rem 0.8rem;
   border-radius: 50%;
@@ -89,7 +89,7 @@
   transition: transform 0.3s ease;
 }
 
-.dark-mode-toggle:hover {
+.darkModeToggle:hover {
   transform: rotate(20deg);
   color: #0070f3;
 }
@@ -106,38 +106,38 @@ body.dark .navbar {
   box-shadow: 0 2px 12px rgba(255,255,255,0.1);
 }
 
-body.dark .navbar-title {
+body.dark .navbarTitle {
   color: #eee;
 }
 
-body.dark .nav-link {
+body.dark .navLinks {
   color: #ccc;
 }
 
-body.dark .nav-link:hover {
+body.dark .navLinks:hover {
   background-color: #333;
   color: #66aaff;
 }
 
-body.dark .login-btn {
+body.dark .loginBtn {
   background-color: #3399ff;
   box-shadow: 0 4px 12px rgba(51,153,255,0.5);
 }
 
-body.dark .login-btn:hover {
+body.dark .loginBtn:hover {
   background-color: #1a7de0;
 }
 
-body.dark .logout-btn {
+body.dark .logoutBtn {
   color: #ff6666;
 }
 
-body.dark .logout-btn:hover {
+body.dark .logoutBtn:hover {
   background-color: #441111;
   color: #ff4444;
 }
 
-body.dark .dark-mode-toggle:hover {
+body.dark .darkModeToggle:hover {
   color: #66aaff;
   transform: rotate(-20deg);
 }
