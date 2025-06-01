@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import '../styles/HomePage.css'
+import '../styles/homePage.css'
 import '../styles/globals.css'
 
 import Navbar from '@/components/Navbar'
