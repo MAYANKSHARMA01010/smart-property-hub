@@ -8,6 +8,8 @@
   position: sticky;
   top: 0;
   z-index: 1000;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .navbar-left {
@@ -17,10 +19,16 @@
 }
 
 .navbar-title {
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: #000;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #111;
   cursor: pointer;
+  user-select: none;
+  transition: color 0.3s ease;
+}
+
+.navbar-title:hover {
+  color: #0070f3;
 }
 
 .navbar-right {
@@ -29,49 +37,107 @@
   gap: 1rem;
 }
 
-.login-button,
-.dark-mode-button,
-.navLinks {
-  padding: 0.4rem 0.8rem;
+.nav-link {
+  padding: 0.5rem 1rem;
   background: none;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
-  font-size: 0.9rem;
-  color: #000;
-  transition: background-color 0.2s, color 0.2s;
+  font-size: 1rem;
+  color: #333;
+  font-weight: 500;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  user-select: none;
 }
 
-.login-button:hover,
-.dark-mode-button:hover,
-.navLinks:hover {
-  background-color: #f0f0f0;
+.nav-link:hover {
+  background-color: #e8f0fe;
   color: #0070f3;
 }
 
+.login-btn {
+  font-weight: 600;
+  color: #fff;
+  background-color: #0070f3;
+  box-shadow: 0 4px 12px rgba(0,112,243,0.3);
+  transition: box-shadow 0.3s ease;
+}
+
+.login-btn:hover {
+  box-shadow: 0 6px 20px rgba(0,112,243,0.5);
+  background-color: #005bb5;
+}
+
+.logout-btn {
+  color: #e00;
+  font-weight: 600;
+}
+
+.logout-btn:hover {
+  background-color: #fee;
+  color: #c00;
+}
+
+.dark-mode-toggle {
+  font-size: 1.3rem;
+  padding: 0.3rem 0.8rem;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.3s ease;
+}
+
+.dark-mode-toggle:hover {
+  transform: rotate(20deg);
+  color: #0070f3;
+}
+
+/* Dark mode styles */
 body.dark {
   background-color: #121212;
-  color: #fff;
+  color: #eee;
 }
 
 body.dark .navbar {
   background-color: #1e1e1e;
   border-color: #333;
+  box-shadow: 0 2px 12px rgba(255,255,255,0.1);
 }
 
 body.dark .navbar-title {
-  color: #fff;
+  color: #eee;
 }
 
-body.dark .login-button,
-body.dark .dark-mode-button,
-body.dark .navLinks {
-  color: #fff;
+body.dark .nav-link {
+  color: #ccc;
 }
 
-body.dark .login-button:hover,
-body.dark .dark-mode-button:hover,
-body.dark .navLinks:hover {
-  background-color: #2a2a2a;
-  color: #1e90ff;
+body.dark .nav-link:hover {
+  background-color: #333;
+  color: #66aaff;
+}
+
+body.dark .login-btn {
+  background-color: #3399ff;
+  box-shadow: 0 4px 12px rgba(51,153,255,0.5);
+}
+
+body.dark .login-btn:hover {
+  background-color: #1a7de0;
+}
+
+body.dark .logout-btn {
+  color: #ff6666;
+}
+
+body.dark .logout-btn:hover {
+  background-color: #441111;
+  color: #ff4444;
+}
+
+body.dark .dark-mode-toggle:hover {
+  color: #66aaff;
+  transform: rotate(-20deg);
 }

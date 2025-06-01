@@ -12,11 +12,12 @@ export default function PropertyCard({ property }) {
   };
 
   return (
-    <div className="property-card" onClick={handleClick}>
+    <div className="property-card" onClick={handleClick} role="button" tabIndex={0} onKeyPress={e => e.key === 'Enter' && handleClick()}>
       <img
         src={property.image || '/images/default.jpg'}
         alt={property.title}
         className="property-image"
+        loading="lazy"
       />
       <div className="property-info">
         <h3>{property.title}</h3>
