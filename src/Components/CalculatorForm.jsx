@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import '../styles/CalculatorForm.css';
-import calculateRentVsBuy from '@/utils/calculatorLogic.js';
+import calculateRentVsBuy from '@/utility/calculatorLogic.js';
 import CalculatorResult from './CalculatorResult.jsx';
 
 export default function CalculatorForm({ isMini = false }) {
