@@ -2,7 +2,7 @@
 
 import React from 'react';
 import '../styles/globals.css';
-import Homepage from '../pages/homepage.jsx';
+import Homepage from '../components/homepage.jsx';
 
 export default function Home() {
   return (
