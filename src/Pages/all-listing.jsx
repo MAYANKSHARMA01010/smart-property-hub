@@ -1,11 +1,10 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
-import PropertyCard from '@/components/PropertyCard';
+import Navbar from '@/components/Navbar.jsx';
+import Footer from '@/components/Footer.jsx';
+import PropertyCard from '@/components/PropertyCard.jsx';
 import propertiesData from '@/data/properties.json';
-import '../styles/globals.css';
 import '../styles/AllListing.css';
 
 const AllListing = () => {

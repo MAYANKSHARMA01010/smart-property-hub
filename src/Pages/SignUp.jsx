@@ -1,6 +1,5 @@
 "use client";
 import React, { useState } from "react";
-import "../styles/globals.css";
 import "../styles/SignUp.css";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "../lib/firebase";

@@ -1,10 +1,9 @@
 'use client';
 
 import React from 'react';
-import '../styles/globals.css';
 import '../styles/profile.css';
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
+import Navbar from '@/components/Navbar.jsx';
+import Footer from '@/components/Footer.jsx';
 
 function Profile() {
   return (

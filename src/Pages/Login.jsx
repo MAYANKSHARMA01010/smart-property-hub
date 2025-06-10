@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import "../styles/globals.css";
 import "../styles/Login.css";
 import { useRouter } from "next/navigation";
 import { auth, db } from "../lib/firebase";
