@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { auth, db } from "../lib/firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
+import { toast } from "react-toastify";
 
 export default function Login() {
   const router = useRouter();
@@ -17,7 +18,7 @@ export default function Login() {
     e.preventDefault();
 
     if (!email || !password) {
-      alert("Please fill in all fields");
+      toast.error("Please fill in all fields");
       return;
     }
 
@@ -31,33 +32,34 @@ export default function Login() {
       const userDocSnap = await getDoc(userDocRef);
 
       if (userDocSnap.exists()) {
-        alert("Login successful!");
-        router.push("/profile");
-      } else {
-        alert("User data not found in Firestore");
+        toast.success("Login successful!");
+        router.push("/");
+      } 
+      else {
+        toast.error("User data not found in Firestore");
       }
-
-    } catch (error) {
+    } 
+    catch (error) {
       switch (error.code) {
         case "auth/too-many-requests":
-          alert("Too many failed attempts. Please try again later.");
+          toast.error("Too many failed attempts. Please try again later.");
           break;
         case "auth/wrong-password":
-          alert("Incorrect password.");
+          toast.error("Incorrect password.");
           break;
         case "auth/user-not-found":
-          alert("No account found with this email.");
+          toast.error("No account found with this email.");
           break;
         case "auth/invalid-email":
-          alert("Invalid email format.");
+          toast.error("Invalid email format.");
           break;
         default:
-          alert(`Login failed: ${error.message}`);
+          toast.error(`Login failed: ${error.message}`);
       }
     }
-
     setLoading(false);
   };
+
 
   return (
     <div className="login-container">

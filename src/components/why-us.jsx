@@ -11,7 +11,7 @@ function WhyUs() {
       <div className='why-us-content'>
         <div className='why-us-image'>
           <img
-            src='/images/why-us.jpg'
+            src='/whyUs.png'
             alt='Benefits of using SmartProperty Hub'
             loading='lazy'
           />

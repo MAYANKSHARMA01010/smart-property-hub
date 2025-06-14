@@ -1,16 +1,19 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import "../styles/globals.css";
 import '../styles/Navbar.css';
 
-import { auth } from '@/lib/firebase';
-import { onAuthStateChanged, signOut } from 'firebase/auth';
+import { auth, db } from '../lib/firebase.js';
+import { onAuthStateChanged } from 'firebase/auth';
+import { doc, getDoc } from 'firebase/firestore';
 
 export default function Navbar() {
   const [darkMode, setDarkMode] = useState(false);
   const [user, setUser] = useState(null);
+  const [userData, setUserData] = useState(null);
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   const toggleDarkMode = () => {
@@ -19,21 +22,21 @@ export default function Navbar() {
   };
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
+      if (currentUser) {
+        const docRef = doc(db, 'users', currentUser.uid);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          setUserData(docSnap.data());
+        }
+      }
+      setLoading(false);
     });
     return () => unsubscribe();
   }, []);
 
-  const handleLogout = async () => {
-    try {
-      await signOut(auth);
-      alert('Logged out successfully');
-      router.push('/');
-    } catch (err) {
-      console.error(err);
-    }
-  };
+  if (loading) return null;
 
   return (
     <nav className="navbar" aria-label="Primary Navigation">
@@ -49,12 +52,9 @@ export default function Navbar() {
         <button className="navLinks" onClick={() => router.push('/all-listing')}>Properties</button>
 
         {user ? (
-          <>
-            <button className="navLinks" onClick={() => router.push('/profile')}>
-              {user.displayName || user.email?.split('@')[0] || "Profile"}
-            </button>
-            <button className="navLinks logoutBtn" onClick={handleLogout}>Logout</button>
-          </>
+          <button className="navLinks" onClick={() => router.push('/profile')}>
+            {userData?.fullName?.split(" ")[0] || "Profile"}
+          </button>
         ) : (
           <button className="navLinks loginBtn" onClick={() => router.push('/login')}>Login</button>
         )}
