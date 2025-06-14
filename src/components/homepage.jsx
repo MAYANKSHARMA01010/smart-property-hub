@@ -45,7 +45,7 @@ export default function HomePage() {
           </div>
           <div className="mini-calculator-right">
             <img
-              src="/images/mini-calculator-image.png"
+              src="/miniCalculator.png"
               alt="Calculator Illustration"
               className="mini-calculator-image"
             />
