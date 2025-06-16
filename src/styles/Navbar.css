@@ -169,10 +169,6 @@ body.dark .hamburger {
   color: #eee;
 }
 
-body.dark .navRight {
-  background-color: #0f172a;
-}
-
 body.dark .loginBtn {
   background-color: #3399ff;
   box-shadow: 0 4px 12px rgba(51, 153, 255, 0.5);
