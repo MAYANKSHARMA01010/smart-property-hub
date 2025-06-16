@@ -1,44 +1,64 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 🏡 SmartProperty Hub
 
-## Getting Started
+SmartProperty Hub is a full-stack real estate platform built to simplify property discovery, buying, renting, and selling. Users can explore verified listings with filters, sort options, badges, dark mode, and more — all while leveraging Firebase for authentication and database services.
 
-First, run the development server:
+---
+
+## 🌐 Live Demo
+
+🚀 [Visit Live Site](#) — *Coming Soon*
+
+---
+
+## 📸 Preview
+
+![SmartProperty Hub Preview](./preview.png)
+
+---
+
+## 📁 Features
+
+### 👤 User Features
+- 🔐 Google and Email/Password Authentication (Firebase)
+- 🔎 Filter properties by:
+  - City
+  - Type (Apartment, Villa, Plot, etc.)
+  - Price Range
+- 🏷️ Tag badges like **"Ready to Move"**, **"New Launch"**
+- 🌙 Seamless Dark Mode Support
+- 🧾 Pagination with Jump (First, Previous, Next, Last)
+- 📊 Property Cards with:
+  - Title, Price, Area
+  - Amenities, Description
+  - Image matching property type
+
+### 🛠️ Admin/Dev Features
+- 🧪 Fake data generation using `@faker-js/faker`
+- 🗂️ JSON-based or Firebase Firestore property storage
+- 🧹 Reset Filters button
+- 🧭 Optimized for large datasets (10M+ entries planned)
+
+---
+
+## 🛠️ Tech Stack
+
+| Frontend   | Backend / Auth | Data Storage | Tools            |
+|------------|----------------|--------------|------------------|
+| React + JSX | Firebase Auth  | Firestore    | Faker.js         |
+| Tailwind CSS| Firebase Storage | JSON fallback | Google Maps API (planned) |
+| Dark Mode  | Firebase Hosting |              | Responsive Design |
+
+---
+
+## 🧪 Setup & Installation
 
 ```bash
+# 1. Clone the repository
+git clone https://github.com/MAYANKSHARMA01010/smart-property-hub.git
+cd smart-property-hub
+
+# 2. Install dependencies
+npm install
+
+# 3. Start development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-
-<!-- ## Ignored Files
-
-The following files/folders are excluded using `.gitignore` and are not pushed to the repository:
-
-- `node_modules/` – Dependency folder managed by npm/yarn.
-- `.env.local` – Environment variables for local development.
-- `.next/` – Next.js build output. -->

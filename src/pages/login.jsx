@@ -36,7 +36,7 @@ export default function Login() {
         toast.success("Login successful!");
         setTimeout(() => {
           router.push("/");
-        }, 6000);
+        }, 3000);
       } 
       else {
         toast.error("User data not found in Firestore");
