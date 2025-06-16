@@ -6,6 +6,8 @@ import Footer from '@/components/Footer.jsx';
 import PropertyCard from '@/components/PropertyCard.jsx';
 import propertiesData from '@/data/properties.json';
 import '../styles/AllListing.css';
+import { toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 
 const AllListing = () => {
   const [filterVisible, setFilterVisible] = useState(false);
@@ -23,16 +25,24 @@ const AllListing = () => {
   const handleCityChange = (city) => {
     if (selectedCities.includes(city)) {
       setSelectedCities(selectedCities.filter(c => c !== city));
-    } else if (selectedCities.length < 8) {
+    } 
+    else if (selectedCities.length < 8) {
       setSelectedCities([...selectedCities, city]);
+    }
+    if (selectedCities.length === 8) {
+      toast.error('You can select a maximum of 8 cities.');
     }
   };
 
   const handleTagChange = (tag) => {
     if (selectedTags.includes(tag)) {
       setSelectedTags(selectedTags.filter(t => t !== tag));
-    } else if (selectedTags.length < 5) {
+    } 
+    else if (selectedTags.length < 5) {
       setSelectedTags([...selectedTags, tag]);
+    }
+    if (selectedTags.length === 5) {
+      toast.error('You can select a maximum of 5 tags.');
     }
   };
 
@@ -78,11 +88,25 @@ const AllListing = () => {
         <div className="filter-toggle" onClick={toggleFilter}>
           {filterVisible ? '▲ Hide Filters' : '▼ Show Filters'}
         </div>
-
+        
         {filterVisible && (
           <div className="filters">
+
+             <div className="filter-section">
+              <h3>Sort By</h3>
+              <select value={sortOption} onChange={handleSortChange}>
+                <option value="">-- Select Sort --</option>
+                <option value="price-low-high">Price: Low to High</option>
+                <option value="price-high-low">Price: High to Low</option>
+                <option value="city-az">City: A-Z</option>
+                <option value="city-za">City: Z-A</option>
+              </select>
+            </div>
+
+            <div style={{color: '#ffffff'}}>-</div>
+
             <div className="filter-section">
-              <h3>Select Cities (max 8)</h3>
+              <h3>Select Cities</h3>
               <div className="options">
                 {[
                   "Noida", "Delhi", "Gurugram", "Ghaziabad", "Faridabad", "Greater Noida",
@@ -103,7 +127,7 @@ const AllListing = () => {
             </div>
 
             <div className="filter-section">
-              <h3>Select Tags (max 5)</h3>
+              <h3>Select Tags</h3>
               <div className="options">
                 {[
                   "Affordable", "New Construction", "Budget", "Govt Scheme", "Luxury",
@@ -126,16 +150,6 @@ const AllListing = () => {
               </div>
             </div>
 
-            <div className="filter-section">
-              <h3>Sort By</h3>
-              <select value={sortOption} onChange={handleSortChange}>
-                <option value="">-- Select Sort --</option>
-                <option value="price-low-high">Price: Low to High</option>
-                <option value="price-high-low">Price: High to Low</option>
-                <option value="city-az">City: A-Z</option>
-                <option value="city-za">City: Z-A</option>
-              </select>
-            </div>
           </div>
         )}
 
@@ -161,9 +175,21 @@ const AllListing = () => {
           </button>
         </div>
 
-        <button className="scroll-to-top" onClick={handleScrollTop}>↑ Top</button>
+        <button className="scroll-to-top" onClick={handleScrollTop}>↑</button>
       </div>
       <Footer />
+      <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
     </>
   );
 };

@@ -178,13 +178,12 @@ body.dark .pagination span {
   color: #e0e0e0;
 }
 
-/* Scroll-to-top button */
 .scroll-to-top {
   position: fixed;
-  bottom: 20px;
+  bottom: 30px; /* Increased to ensure it floats above the footer */
   right: 20px;
-  background-color: #3498db;
-  color: white;
+  background-color: #c1b7b7;
+  color: rgb(84, 113, 114);
   border: none;
   padding: 12px 14px;
   border-radius: 50%;
@@ -192,6 +191,7 @@ body.dark .pagination span {
   cursor: pointer;
   box-shadow: 0 6px 12px rgba(0,0,0,0.2);
   transition: background-color 0.3s, transform 0.2s;
+  z-index: 9999; /* Ensures it appears above all elements, including footer */
 }
 
 .scroll-to-top:hover {
@@ -199,11 +199,12 @@ body.dark .pagination span {
   transform: translateY(-2px);
 }
 
+/* Dark mode adjustments */
 body.dark .scroll-to-top {
-  background-color: #2980b9;
+  background-color: #443f3f;
+  color: #e0e0e0;
 }
 
 body.dark .scroll-to-top:hover {
   background-color: #1f6691;
 }
-

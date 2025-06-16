@@ -7,6 +7,7 @@ import { auth, db } from "../lib/firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 
 export default function Login() {
   const router = useRouter();
@@ -33,29 +34,25 @@ export default function Login() {
 
       if (userDocSnap.exists()) {
         toast.success("Login successful!");
-        router.push("/");
+        setTimeout(() => {
+          router.push("/");
+        }, 6000);
       } 
       else {
         toast.error("User data not found in Firestore");
       }
     } 
     catch (error) {
-      switch (error.code) {
-        case "auth/too-many-requests":
-          toast.error("Too many failed attempts. Please try again later.");
-          break;
-        case "auth/wrong-password":
-          toast.error("Incorrect password.");
-          break;
-        case "auth/user-not-found":
-          toast.error("No account found with this email.");
-          break;
-        case "auth/invalid-email":
-          toast.error("Invalid email format.");
-          break;
-        default:
-          toast.error(`Login failed: ${error.message}`);
-      }
+      console.log("Login error code:", error.code);
+      const errorMessages = {
+        "auth/too-many-requests": "Too many login attempts. Please try again later.",
+        "auth/wrong-password": "Incorrect password. Please try again.",
+        "auth/user-not-found": "No user found with this email.",
+        "auth/invalid-email": "Invalid email address.",
+        "auth/invalid-credential": "Invalid credentials. Please try again or check your emial/password.",
+      };
+
+      toast.error(errorMessages[error.code] || "Login failed. Please try again.");
     }
     setLoading(false);
   };
@@ -98,6 +95,18 @@ export default function Login() {
           <a onClick={() => router.push("/")} className="login-link">Go to Home</a>
         </p>
       </div>
+      <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
     </div>
   );
 }

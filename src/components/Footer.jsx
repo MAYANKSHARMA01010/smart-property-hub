@@ -11,12 +11,12 @@ const Footer = () => {
           <p>Helping you find smarter real estate decisions.</p>
         </div>
         <address className="footer-links">
-          <p><FaLocationArrow aria-hidden="true" /> Pune, India - 412206</p>
+          <p><FaLocationArrow aria-hidden="true" /> Sonipat, Haryana, India - 131021</p>
           <p><FaEnvelope aria-hidden="true" /> <a href="mailto:smartpropertyhub@email.com" className="email-link">smartpropertyhub@email.com</a></p>
         </address>
         <div className="footer-socials" aria-label="Social media links">
           <a
-            href="https://www.linkedin.com/in/your-profile"
+            href="https://www.linkedin.com/in/mayanksharma3369/"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="LinkedIn"
@@ -25,7 +25,7 @@ const Footer = () => {
             <FaLinkedin />
           </a>
           <a
-            href="https://github.com/your-profile"
+            href="https://github.com/MAYANKSHARMA01010"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="GitHub"

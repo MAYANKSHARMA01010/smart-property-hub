@@ -9,20 +9,23 @@
   font-family: Arial, sans-serif;
   border-top: 1px solid rgba(0, 0, 0, 0.1);
   margin-top: auto;
+  z-index: 100;
 }
 
 .footer-content {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
+  align-items: flex-start;
   gap: 20px;
   margin-bottom: 20px;
+  text-align: left;
 }
 
 .footer-content div,
 .footer-links {
   flex: 1;
-  min-width: 200px;
+  min-width: 220px;
 }
 
 .footer-content h3 {
@@ -36,7 +39,6 @@
   font-size: 1rem;
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: 8px;
 }
 
@@ -62,6 +64,8 @@
   justify-content: center;
   align-items: center;
   gap: 16px;
+  margin-top: 10px;
+  flex-wrap: wrap;
 }
 
 .footer-socials a {
@@ -87,34 +91,58 @@
   font-size: 0.9rem;
   opacity: 0.6;
   margin-top: 10px;
+  text-align: center;
 }
 
-/* Dark Mode Styles */
+@media (max-width: 768px) {
+  .footer-content {
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+  }
+
+  .footer-content div,
+  .footer-links {
+    min-width: unset;
+    width: 100%;
+  }
+
+  .footer-content h3 {
+    font-size: 1.3rem;
+  }
+
+  .footer-content p {
+    justify-content: center;
+    font-size: 0.95rem;
+  }
+
+  .footer-socials {
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .footer-copy {
+    font-size: 0.8rem;
+    margin-top: 5px;
+  }
+}
+
 body.dark .footer {
   background: #1e1e1e;
   color: #fff;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-body.dark .footer-content h3 {
-  color: #fff;
-}
-
-body.dark .footer-content p {
-  color: #ccc;
-}
-
-body.dark .footer-links p {
-  color: #ccc;
-}
-
-body.dark .email-link {
+body.dark .footer-content h3,
+body.dark .footer-content p,
+body.dark .footer-links p,
+body.dark .email-link,
+body.dark .footer-copy {
   color: #ccc;
 }
 
 body.dark .email-link:hover {
   color: #66ccff;
-  text-decoration: underline;
 }
 
 body.dark .footer-socials a {
@@ -123,9 +151,4 @@ body.dark .footer-socials a {
 
 body.dark .footer-socials a:hover {
   color: #66ccff;
-  opacity: 1;
-}
-
-body.dark .footer-copy {
-  color: #999;
 }
