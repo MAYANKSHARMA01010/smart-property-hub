@@ -14,11 +14,16 @@ export default function Navbar() {
   const [user, setUser] = useState(null);
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [menuOpen, setMenuOpen] = useState(false);
   const router = useRouter();
 
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
     document.body.classList.toggle('dark');
+  };
+
+  const toggleMenu = () => {
+    setMenuOpen(!menuOpen);
   };
 
   useEffect(() => {
@@ -39,14 +44,25 @@ export default function Navbar() {
   if (loading) return null;
 
   return (
-    <nav className="navbar" aria-label="Primary Navigation">
+    <nav className="navbar">
       <div className="navbarLeft">
         <h1 className="navbarTitle" onClick={() => router.push('/')}>
           SmartProperty Hub
         </h1>
       </div>
 
-      <div className="navRight">
+      <div className="navbarIcons">
+        <button
+          className={`darkModeToggle ${darkMode ? 'active' : ''}`}
+          onClick={toggleDarkMode}
+          title={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+        >
+          {darkMode ? "☀️" : "🌙"}
+        </button>
+        <button className="hamburger" onClick={toggleMenu}>☰</button>
+      </div>
+
+      <div className={`navRight ${menuOpen ? 'showMenu' : ''}`}>
         <button className="navLinks" onClick={() => router.push('/')}>Home</button>
         <button className="navLinks" onClick={() => router.push('/about')}>About</button>
         <button className="navLinks" onClick={() => router.push('/all-listing')}>Properties</button>
@@ -58,16 +74,15 @@ export default function Navbar() {
         ) : (
           <button className="navLinks loginBtn" onClick={() => router.push('/login')}>Login</button>
         )}
-
         <button
           className={`darkModeToggle ${darkMode ? 'active' : ''}`}
-          aria-label="Toggle dark mode"
           onClick={toggleDarkMode}
           title={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
         >
           {darkMode ? "☀️" : "🌙"}
         </button>
       </div>
+      
     </nav>
   );
 }

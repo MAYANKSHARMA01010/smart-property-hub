@@ -94,34 +94,88 @@
   color: #0070f3;
 }
 
-/* Dark mode styles */
+.navbarIcons {
+  display: none;
+  align-items: center;
+  gap: 1rem;
+}
+
+.hamburger {
+  font-size: 1.8rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #333;
+}
+
+@media (max-width: 768px) {
+  .navRight {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    width: 100%;
+    background-color: #fff;
+    border-top: 1px solid #ddd;
+    padding: 1rem 2rem;
+  }
+
+  .navRight.showMenu {
+    display: flex;
+  }
+
+  .navLinks {
+    width: 100%;
+    text-align: left;
+    padding: 1rem 0;
+  }
+
+  .navbarIcons {
+    display: flex;
+  }
+
+  .navRight .darkModeToggle,
+  .navRight .hamburger {
+    display: none;
+  }
+}
+
 body.dark {
   background-color: #121212;
   color: #eee;
 }
 
 body.dark .navbar {
-  background-color: #1e1e1e;
-  border-color: #333;
-  box-shadow: 0 2px 12px rgba(255,255,255,0.1);
+  background-color: #1e293b;
+  border-color: #334155;
+  box-shadow: 0 2px 12px rgba(255, 255, 255, 0.08);
 }
 
 body.dark .navbarTitle {
-  color: #eee;
+  color: #f1f5f9;
 }
 
 body.dark .navLinks {
-  color: #ccc;
+  color: #f1f5f9;
 }
 
 body.dark .navLinks:hover {
-  background-color: #333;
+  background-color: #334155;
   color: #66aaff;
+}
+
+body.dark .hamburger {
+  color: #eee;
+}
+
+body.dark .navRight {
+  background-color: #0f172a;
 }
 
 body.dark .loginBtn {
   background-color: #3399ff;
-  box-shadow: 0 4px 12px rgba(51,153,255,0.5);
+  box-shadow: 0 4px 12px rgba(51, 153, 255, 0.5);
 }
 
 body.dark .loginBtn:hover {

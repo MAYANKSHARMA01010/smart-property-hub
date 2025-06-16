@@ -7,7 +7,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyC9oFWw2gi159hOl328cA23B2C0bn-mkUs",
   authDomain: "samart-property-hub-69.firebaseapp.com",
   projectId: "samart-property-hub-69",
-  storageBucket: "samart-property-hub-69.appspot.com", // ✅ Fixed typo
+  storageBucket: "samart-property-hub-69.appspot.com",
   messagingSenderId: "72940615049",
   appId: "1:72940615049:web:ee7a2e50bf8683c33b1d58"
 };

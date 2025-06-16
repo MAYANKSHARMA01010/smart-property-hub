@@ -1,10 +1,14 @@
 .footer {
+  position: relative;
+  bottom: 0;
+  width: 100%;
   background: #f5f7fa;
   color: #333;
   padding: 40px 20px 20px;
   text-align: center;
   font-family: Arial, sans-serif;
   border-top: 1px solid rgba(0, 0, 0, 0.1);
+  margin-top: auto;
 }
 
 .footer-content {
