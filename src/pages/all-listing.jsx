@@ -1,197 +1,169 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import Navbar from '@/components/Navbar.jsx';
-import Footer from '@/components/Footer.jsx';
-import PropertyCard from '@/components/PropertyCard.jsx';
-import propertiesData from '@/data/properties.json';
 import '../styles/AllListing.css';
-import { toast } from 'react-toastify';
-import { ToastContainer } from 'react-toastify';
+import Navbar from '../components/Navbar.jsx';
+import Footer from '../components/Footer.jsx';
+import propertiesData from '../data/properties.json';
 
-const AllListing = () => {
-  const [filterVisible, setFilterVisible] = useState(false);
-  const [selectedCities, setSelectedCities] = useState([]);
-  const [selectedTags, setSelectedTags] = useState([]);
-  const [sortOption, setSortOption] = useState('');
+export default function AllListing() {
+  const [properties, setProperties] = useState([]);
+  const [filtered, setFiltered] = useState([]);
+  const [filters, setFilters] = useState({
+    city: '',
+    type: '',
+    sort: '',
+    readyToMove: false,
+  });
+
   const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 28;
 
-  const propertiesPerPage = 60;
+  useEffect(() => {
+    setProperties(propertiesData);
+    setFiltered(propertiesData);
+  }, []);
 
-  const toggleFilter = () => {
-    setFilterVisible(!filterVisible);
+  const handleFilterChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    const newValue = type === 'checkbox' ? checked : value;
+    setFilters({ ...filters, [name]: newValue });
   };
 
-  const handleCityChange = (city) => {
-    if (selectedCities.includes(city)) {
-      setSelectedCities(selectedCities.filter(c => c !== city));
-    } 
-    else if (selectedCities.length < 8) {
-      setSelectedCities([...selectedCities, city]);
-    }
-    if (selectedCities.length === 8) {
-      toast.error('You can select a maximum of 8 cities.');
-    }
+  const applyFilters = () => {
+    let result = [...propertiesData];
+
+    if (filters.city) result = result.filter(p => p.city === filters.city);
+    if (filters.type) result = result.filter(p => p.propertyType === filters.type);
+    if (filters.readyToMove) result = result.filter(p => p.amenities.includes("Ready to Move"));
+    if (filters.sort === 'lowToHigh') result.sort((a, b) => a.price - b.price);
+    if (filters.sort === 'highToLow') result.sort((a, b) => b.price - a.price);
+    if (filters.sort === 'AtoZ') result.sort((a, b) => a.title.localeCompare(b.title));
+    if (filters.sort === 'ZtoA') result.sort((a, b) => b.title.localeCompare(a.title));
+
+    setFiltered(result);
+    setCurrentPage(1);
   };
 
-  const handleTagChange = (tag) => {
-    if (selectedTags.includes(tag)) {
-      setSelectedTags(selectedTags.filter(t => t !== tag));
-    } 
-    else if (selectedTags.length < 5) {
-      setSelectedTags([...selectedTags, tag]);
-    }
-    if (selectedTags.length === 5) {
-      toast.error('You can select a maximum of 5 tags.');
-    }
-  };
-
-  const handleSortChange = (e) => {
-    setSortOption(e.target.value);
-  };
-
-  const filteredProperties = propertiesData
-    .filter(p =>
-      (selectedCities.length === 0 || selectedCities.includes(p.city)) &&
-      (selectedTags.length === 0 || (p.tags && p.tags.some(tag => selectedTags.includes(tag))))
-    )
-    .sort((a, b) => {
-      if (sortOption === 'price-low-high') {
-        return a.price - b.price;
-      }
-      if (sortOption === 'price-high-low') {
-        return b.price - a.price;
-      }
-      if (sortOption === 'city-az') {
-        return a.city.localeCompare(b.city);
-      }
-      if (sortOption === 'city-za') {
-        return b.city.localeCompare(a.city);
-      }
-      return 0;
+  const resetFilters = () => {
+    setFilters({
+      city: '',
+      type: '',
+      sort: '',
+      readyToMove: false,
     });
-
-  const totalPages = Math.ceil(filteredProperties.length / propertiesPerPage);
-  const currentProperties = filteredProperties.slice(
-    (currentPage - 1) * propertiesPerPage,
-    currentPage * propertiesPerPage
-  );
-
-  const handleScrollTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setFiltered(propertiesData);
+    setCurrentPage(1);
   };
+
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const currentItems = filtered.slice(startIndex, startIndex + itemsPerPage);
+  const totalPages = Math.ceil(filtered.length / itemsPerPage);
 
   return (
-    <>
+    <div className="page">
       <Navbar />
-      <div className="all-listing-page">
-        <div className="filter-toggle" onClick={toggleFilter}>
-          {filterVisible ? '▲ Hide Filters' : '▼ Show Filters'}
+      <div className='all-listing'>
+        <h1 className="title">All Property Listings</h1>
+
+        <div className="filters">
+          <select name="city" value={filters.city} onChange={handleFilterChange}>
+            <option value="">All Cities</option>
+            {[...new Set(properties.map(p => p.city))].map(city => (
+              <option key={city} value={city}>{city}</option>
+            ))}
+          </select>
+
+          <select name="type" value={filters.type} onChange={handleFilterChange}>
+            <option value="">All Types</option>
+            {[...new Set(properties.map(p => p.propertyType))].map(type => (
+              <option key={type} value={type}>{type}</option>
+            ))}
+          </select>
+
+          <select name="sort" value={filters.sort} onChange={handleFilterChange}>
+            <option value="">Sort by</option>
+            <option value='AtoZ'>Name: A to Z</option>
+            <option value='ZtoA'>Name: Z to A</option>
+            <option value="lowToHigh">Price: Low to High</option>
+            <option value="highToLow">Price: High to Low</option>
+          </select>
+
+          <label className="ready-filter">
+            <input
+              type="checkbox"
+              name="readyToMove"
+              checked={filters.readyToMove}
+              onChange={handleFilterChange}
+            />
+            Ready to Move
+          </label>
+
+          <button onClick={applyFilters}>Apply</button>
+          <button onClick={resetFilters} className="reset">Reset Filters</button>
         </div>
-        
-        {filterVisible && (
-          <div className="filters">
 
-             <div className="filter-section">
-              <h3>Sort By</h3>
-              <select value={sortOption} onChange={handleSortChange}>
-                <option value="">-- Select Sort --</option>
-                <option value="price-low-high">Price: Low to High</option>
-                <option value="price-high-low">Price: High to Low</option>
-                <option value="city-az">City: A-Z</option>
-                <option value="city-za">City: Z-A</option>
-              </select>
-            </div>
-
-            <div style={{color: '#ffffff'}}>-</div>
-
-            <div className="filter-section">
-              <h3>Select Cities</h3>
-              <div className="options">
-                {[
-                  "Noida", "Delhi", "Gurugram", "Ghaziabad", "Faridabad", "Greater Noida",
-                  "Mumbai", "Pune", "Bangalore", "Hyderabad", "Chennai", "Kolkata",
-                  "Lucknow", "Jaipur", "Indore", "Bhopal", "Ahmedabad", "Chandigarh",
-                  "Surat", "Nagpur"
-                ].map(city => (
-                  <label key={city}>
-                    <input
-                      type="checkbox"
-                      checked={selectedCities.includes(city)}
-                      onChange={() => handleCityChange(city)}
-                    />
-                    {city}
-                  </label>
+        <div className="property-grid">
+          {currentItems.map(property => (
+            <div className="property-card" key={property.id}>
+              <img src={property.image || '/default-property.jpg'} alt={property.title} />
+              <h2>{property.title}</h2>
+              <p><strong>Location:</strong> {property.location.city}, {property.location.state}</p>
+              <p><strong>Type:</strong> {property.propertyType}</p>
+              <div className="cards">
+                <div className="card">₹{property.price.toLocaleString()}</div>
+                <div className="card">{property.sizeSqFt} sqft</div>
+                <div className="card">{property.bedrooms} Bed / {property.bathrooms} Bath</div>
+              </div>
+              <div className="badges">
+                {property.amenities.slice(0, 3).map((a, i) => (
+                  <span className="badge" key={i}>{a}</span>
                 ))}
+                {property.amenities.includes("Ready to Move") && (
+                  <span className="badge highlight">Ready to Move</span>
+                )}
               </div>
             </div>
-
-            <div className="filter-section">
-              <h3>Select Tags</h3>
-              <div className="options">
-                {[
-                  "Affordable", "New Construction", "Budget", "Govt Scheme", "Luxury",
-                  "Near Metro", "Ready to Move", "Furnished", "Park Facing", "Smart Home",
-                  "Gated Society", "High ROI", "Near School", "Near Hospital",
-                  "Swimming Pool", "Gym", "Clubhouse", "Open Green Space", "Kids Play Area",
-                  "24x7 Security", "Power Backup", "Corner Flat", "Low Maintenance",
-                  "Premium Location", "Vaastu Compliant", "Pet Friendly", "EV Charging",
-                  "Terrace Access", "Private Garden", "Eco-Friendly"
-                ].map(tag => (
-                  <label key={tag}>
-                    <input
-                      type="checkbox"
-                      checked={selectedTags.includes(tag)}
-                      onChange={() => handleTagChange(tag)}
-                    />
-                    {tag}
-                  </label>
-                ))}
-              </div>
-            </div>
-
-          </div>
-        )}
-
-        <div className="properties-grid">
-          {currentProperties.map((property, index) => (
-            <PropertyCard key={index} property={property} />
           ))}
         </div>
 
         <div className="pagination">
-          <button
-            onClick={() => setCurrentPage(p => Math.max(p - 1, 1))}
-            disabled={currentPage === 1}
-          >
-            Previous
-          </button>
-          <span>Page {currentPage} of {totalPages}</span>
-          <button
-            onClick={() => setCurrentPage(p => Math.min(p + 1, totalPages))}
-            disabled={currentPage === totalPages}
-          >
-            Next
-          </button>
+          {currentPage > 3 && (
+            <button onClick={() => setCurrentPage(1)}>⏮ First</button>
+          )}
+          {currentPage > 1 && (
+            <button onClick={() => setCurrentPage(currentPage - 1)}>‹ Prev</button>
+          )}
+          {[...Array(totalPages)].map((_, index) => {
+            const page = index + 1;
+            if (
+              page === currentPage ||
+              page === currentPage - 2 ||
+              page === currentPage - 1 ||
+              page === currentPage + 1 ||
+              page === currentPage + 2
+            ) {
+              return (
+                <button
+                  key={page}
+                  className={page === currentPage ? 'active' : ''}
+                  onClick={() => setCurrentPage(page)}
+                >
+                  {page}
+                </button>
+              );
+            }
+            return null;
+          })}
+          {currentPage < totalPages && (
+            <button onClick={() => setCurrentPage(currentPage + 1)}>Next ›</button>
+          )}
+          {currentPage < totalPages - 2 && (
+            <button onClick={() => setCurrentPage(totalPages)}>Last ⏭</button>
+          )}
         </div>
-
-        <button className="scroll-to-top" onClick={handleScrollTop}>↑</button>
       </div>
       <Footer />
-      <ToastContainer
-          position="top-right"
-          autoClose={5000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="light"
-        />
-    </>
+    </div>
   );
-};
-
-export default AllListing;
+}

@@ -1,210 +1,157 @@
-/* Base styles */
-.all-listing-page {
-  padding: 20px;
-  background-color: #f4f6f8;
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.page {
+  display: flex;
+  flex-direction: column;
   min-height: 100vh;
-  font-family: 'Segoe UI', 'Roboto', 'Arial', sans-serif;
-  color: #2c3e50;
-  transition: background-color 0.3s, color 0.3s;
 }
 
-/* Dark mode base */
-body.dark .all-listing-page {
-  background-color: #121212;
-  color: #e0e0e0;
+.all-listing {
+  flex: 1;
+  padding: 2rem;
+  background-color: var(--bg);
+  color: var(--text);
+  transition: all 0.3s;
 }
 
-/* Filter toggle button */
-.filter-toggle {
-  background-color: #3498db;
-  color: #ffffff;
-  padding: 10px;
+:root {
+  --bg: #f9fafb;
+  --text: #1e293b;
+  --card-bg: #fff;
+  --badge-bg: #e2e8f0;
+  --highlight: #2563eb;
+}
+
+.dark {
+  --bg: #0f172a;
+  --text: #e2e8f0;
+  --card-bg: #1e293b;
+  --badge-bg: #334155;
+  --highlight: #3b82f6;
+}
+
+.title {
+  font-size: 2rem;
   text-align: center;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 600;
-  margin-bottom: 20px;
-  transition: background-color 0.3s, transform 0.2s;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  margin-bottom: 1rem;
 }
 
-.filter-toggle:hover {
-  background-color: #2980b9;
-  transform: translateY(-2px);
-}
-
-/* Dark mode toggle button */
-body.dark .filter-toggle {
-  background-color: #2980b9;
-}
-
-body.dark .filter-toggle:hover {
-  background-color: #1f6691;
-}
-
-/* Filters container */
 .filters {
-  background-color: #ffffff;
-  padding: 20px;
-  border-radius: 12px;
-  margin-bottom: 20px;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-  transition: background-color 0.3s;
-}
-
-body.dark .filters {
-  background-color: #1e1e1e;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
-}
-
-/* Filter section heading */
-.filter-section h3 {
-  margin-bottom: 10px;
-  font-size: 1.2rem;
-  color: #2c3e50;
-}
-
-body.dark .filter-section h3 {
-  color: #ffffff;
-}
-
-/* Options (checkboxes) */
-.options {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  justify-content: center;
 }
 
-.options label {
-  background-color: #f1f1f1;
-  padding: 8px 14px;
-  border-radius: 20px;
-  cursor: pointer;
-  transition: background-color 0.3s, transform 0.2s;
-  font-size: 0.9rem;
-  border: 1px solid #ddd;
-}
-
-.options label:hover {
-  background-color: #e0e0e0;
-  transform: translateY(-2px);
-}
-
-body.dark .options label {
-  background-color: #2a2a2a;
-  border: 1px solid #444;
-  color: #e0e0e0;
-}
-
-body.dark .options label:hover {
-  background-color: #3a3a3a;
-}
-
-/* Checkbox styling (optional) */
-.options input[type="checkbox"] {
-  margin-right: 6px;
-}
-
-/* Sort dropdown */
-.filter-section select {
-  padding: 8px 12px;
+.filters select,
+.filters input {
+  padding: 0.5rem;
   border-radius: 6px;
   border: 1px solid #ccc;
   font-size: 1rem;
+}
+
+.filters button {
+  padding: 0.5rem 1rem;
+  background-color: #0f172a;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
   cursor: pointer;
-  background-color: #ffffff;
-  color: #2c3e50;
-  transition: background-color 0.3s, color 0.3s, border 0.3s;
 }
 
-body.dark .filter-section select {
-  background-color: #2a2a2a;
-  color: #e0e0e0;
-  border: 1px solid #555;
+.filters .reset {
+  background-color: #ef4444;
 }
 
-/* Properties grid */
-.properties-grid {
+.property-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 20px;
-  margin-top: 20px;
+  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
 }
 
-/* Pagination */
+.property-card {
+  background-color: var(--card-bg);
+  border-radius: 12px;
+  overflow: hidden;
+  padding: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.property-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.cards {
+  display: flex;
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+
+.card {
+  background-color: #e0f2fe;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-weight: bold;
+  color: #0369a1;
+}
+
+.badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.badge {
+  background-color: var(--badge-bg);
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+}
+
+.badge.highlight {
+  background-color: var(--highlight);
+  color: white;
+}
+
+.ready-filter {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 500;
+}
+
 .pagination {
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
-  align-items: center;
-  margin-top: 30px;
-  gap: 15px;
+  gap: 6px;
+  margin: 30px 0;
 }
 
 .pagination button {
-  background-color: #3498db;
+  padding: 6px 12px;
+  background-color: #e2e8f0;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.3s ease;
+  font-weight: 500;
+}
+
+.pagination button.active {
+  background-color: #3b82f6;
   color: white;
-  border: none;
-  padding: 10px 16px;
-  border-radius: 8px;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background-color 0.3s, transform 0.2s;
 }
 
-.pagination button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-}
-
-.pagination button:hover:not(:disabled) {
-  background-color: #2980b9;
-  transform: translateY(-2px);
-}
-
-body.dark .pagination button {
-  background-color: #2980b9;
-}
-
-body.dark .pagination button:hover:not(:disabled) {
-  background-color: #1f6691;
-}
-
-.pagination span {
-  font-size: 1rem;
-  color: #2c3e50;
-}
-
-body.dark .pagination span {
-  color: #e0e0e0;
-}
-
-.scroll-to-top {
-  position: fixed;
-  bottom: 30px; /* Increased to ensure it floats above the footer */
-  right: 20px;
-  background-color: #c1b7b7;
-  color: rgb(84, 113, 114);
-  border: none;
-  padding: 12px 14px;
-  border-radius: 50%;
-  font-size: 1.2rem;
-  cursor: pointer;
-  box-shadow: 0 6px 12px rgba(0,0,0,0.2);
-  transition: background-color 0.3s, transform 0.2s;
-  z-index: 9999; /* Ensures it appears above all elements, including footer */
-}
-
-.scroll-to-top:hover {
-  background-color: #2980b9;
-  transform: translateY(-2px);
-}
-
-/* Dark mode adjustments */
-body.dark .scroll-to-top {
-  background-color: #443f3f;
-  color: #e0e0e0;
-}
-
-body.dark .scroll-to-top:hover {
-  background-color: #1f6691;
+.pagination button:hover:not(.active) {
+  background-color: #cbd5e1;
 }
