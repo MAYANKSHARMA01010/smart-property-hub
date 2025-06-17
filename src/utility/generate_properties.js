@@ -65,7 +65,7 @@ const generateProperties = async (count = 10000) => {
 
     properties.push({
       id: faker.string.uuid(),
-      title: `${bedrooms} ${propType} in ${city}`,
+      title: `${propType} in ${city}`,
       description: `Beautiful ${propType.toLowerCase()} in ${city} with ${bedrooms} bedrooms, ${bathrooms} bathrooms, and ${sizeSqFt} sqft area.`,
       propertyType: propType,
       price,
@@ -96,6 +96,7 @@ const generateProperties = async (count = 10000) => {
 
   fs.writeFileSync('src/data/properties.json', JSON.stringify(properties, null, 2));
   console.log(`✅ Generated ${properties.length} properties with fresh images!`);
+  console.log("📸 Pexels API Key:", process.env.PEXELS_API_KEY);
 };
 
 generateProperties();
