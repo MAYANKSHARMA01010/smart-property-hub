@@ -79,9 +79,14 @@ export default function Login() {
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="login-input"
+            className="login-input password-input"
             disabled={loading}
           />
+          <div className="login-link">
+            <a onClick={() => router.push("/forgot-password")} className="login-link">
+              Forgot Password?
+            </a>
+          </div>
           <button type="submit" className="login-button" disabled={loading}>
             {loading ? "Logging in..." : "Submit"}
           </button>
@@ -93,13 +98,12 @@ export default function Login() {
             <a onClick={() => router.push("/signup")} className="login-link">Register Here</a>
           </p>
           <p>
-            <a onClick={() => router.push("/forgot-password")} className="login-link">Forgot Password?</a>
-          </p>
-          <p>
             <a onClick={() => router.push("/")} className="login-link">Go to Home</a>
           </p>
         </div>
-        <ToastContainer
+      </div>
+      <Footer />
+      <ToastContainer
             position="top-right"
             autoClose={5000}
             hideProgressBar={false}
@@ -111,8 +115,6 @@ export default function Login() {
             pauseOnHover
             theme="light"
           />
-      </div>
-      <Footer />
     </div>
   );
 }
