@@ -40,7 +40,7 @@ function SignUp() {
 
       setTimeout(() => {
         router.push("/login");
-      }, 4000);
+      }, 2000);
 
       toast.success("User Registered Successfully!!");
     } 
@@ -108,7 +108,7 @@ function SignUp() {
       <Footer />
       <ToastContainer
         position="top-right"
-        autoClose={5000}
+        autoClose={200}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick
