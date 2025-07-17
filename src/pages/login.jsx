@@ -38,7 +38,7 @@ export default function Login() {
         toast.success("Login successful!");
         setTimeout(() => {
           router.push("/");
-        }, 3000);
+        }, 1500);
       } 
       else {
         toast.error("User data not found in Firestore");
@@ -105,7 +105,7 @@ export default function Login() {
       <Footer />
       <ToastContainer
             position="top-right"
-            autoClose={5000}
+            autoClose={1500}
             hideProgressBar={false}
             newestOnTop={false}
             closeOnClick
