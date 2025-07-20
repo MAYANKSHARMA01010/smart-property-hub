@@ -1,120 +1,164 @@
 "use client";
 
 import React, { useState } from "react";
-import "../styles/Login.css";
 import { useRouter } from "next/navigation";
-import { auth, db } from "../lib/firebase";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
-import { toast } from "react-toastify";
-import { ToastContainer } from "react-toastify";
-import Navbar from "../components/Navbar.jsx";
-import Footer from "../components/Footer.jsx";
+import {
+  auth,
+  googleProvider,
+  RecaptchaVerifier
+} from "../lib/firebase";
+import {
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  signInWithPhoneNumber,
+} from "firebase/auth";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import "../styles/Login.css";
+
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
+import { FcGoogle } from "react-icons/fc";
+import { BsTelephone } from "react-icons/bs";
 
 export default function Login() {
-  const router = useRouter();
+  const [mode, setMode] = useState("email");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
 
-  const handleLogin = async (e) => {
+  const [phone, setPhone] = useState("");
+  const [otp, setOtp] = useState("");
+  const [otpSent, setOtpSent] = useState(false);
+
+  const router = useRouter();
+
+  const handleEmailLogin = async (e) => {
     e.preventDefault();
 
-    if (!email || !password) {
-      toast.error("Please fill in all fields");
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      toast.success("Login successful!");
+      setTimeout(() => router.push("/"), 1500);
+    } catch (error) {
+      const errors = {
+        "auth/invalid-credential": "Invalid credentials",
+        "auth/user-not-found": "User not found",
+        "auth/wrong-password": "Incorrect password",
+      };
+      toast.error(errors[error.code] || error.message);
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    try {
+      await signInWithPopup(auth, googleProvider);
+      toast.success("Google login successful!");
+      setTimeout(() => router.push("/"), 1500);
+    } catch (error) {
+      toast.error("Google login failed!");
+    }
+  };
+
+  const sendOtp = () => {
+    if (!phone) {
+      toast.error("Enter your phone number.");
       return;
     }
 
-    setLoading(true);
+    window.recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha", {
+      size: "invisible",
+    });
 
-    try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
+    const appVerifier = window.recaptchaVerifier;
 
-      const userDocRef = doc(db, "users", user.uid);
-      const userDocSnap = await getDoc(userDocRef);
-
-      if (userDocSnap.exists()) {
-        toast.success("Login successful!");
-        setTimeout(() => {
-          router.push("/");
-        }, 1500);
-      } 
-      else {
-        toast.error("User data not found in Firestore");
-      }
-    } 
-    catch (error) {
-      console.log("Login error code:", error.code);
-      const errorMessages = {
-        "auth/too-many-requests": "Too many login attempts. Please try again later.",
-        "auth/wrong-password": "Incorrect password. Please try again.",
-        "auth/user-not-found": "No user found with this email.",
-        "auth/invalid-email": "Invalid email address.",
-        "auth/invalid-credential": "Invalid credentials. Please try again or check your emial/password.",
-      };
-
-      toast.error(errorMessages[error.code] || "Login failed. Please try again.");
-    }
-    setLoading(false);
+    signInWithPhoneNumber(auth, "+91" + phone, appVerifier)
+      .then((confirmationResult) => {
+        window.confirmationResult = confirmationResult;
+        setOtpSent(true);
+        toast.success("OTP sent!");
+      })
+      .catch(() => {
+        toast.error("Failed to send OTP");
+      });
   };
 
+  const verifyOtp = () => {
+    window.confirmationResult
+      .confirm(otp)
+      .then(() => {
+        toast.success("Phone login successful!");
+        setTimeout(() => router.push("/"), 1500);
+      })
+      .catch(() => {
+        toast.error("Invalid OTP");
+      });
+  };
 
   return (
     <div className="login-page">
       <Navbar />
       <div className="login-container">
-        <h2 className="login-title">Login</h2>
-        <form className="login-form" onSubmit={handleLogin}>
-          <input
-            type="email"
-            placeholder="Email address"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="login-input"
-            disabled={loading}
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="login-input password-input"
-            disabled={loading}
-          />
-          <div className="login-link">
-            <a onClick={() => router.push("/forgot-password")} className="login-link">
-              Forgot Password?
-            </a>
-          </div>
-          <button type="submit" className="login-button" disabled={loading}>
-            {loading ? "Logging in..." : "Submit"}
+        <div className="login-mode-buttons">
+          <button onClick={() => setMode("email")} className={mode === "email" ? "active" : ""}>
+            <FcGoogle size={22} /> Email
           </button>
-        </form>
-
-        <div className="login-links">
-          <p>
-            New user?{" "}
-            <a onClick={() => router.push("/signup")} className="login-link">Register Here</a>
-          </p>
-          <p>
-            <a onClick={() => router.push("/")} className="login-link">Go to Home</a>
-          </p>
+          <button onClick={() => setMode("phone")} className={mode === "phone" ? "active" : ""}>
+            <BsTelephone size={18} /> Phone
+          </button>
         </div>
+
+        {mode === "email" && (
+          <form onSubmit={handleEmailLogin} className="login-form">
+            <input
+              type="email"
+              placeholder="Email"
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+            <input
+              type="password"
+              placeholder="Password"
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            <button type="submit">Login</button>
+            <p className="or-divider">OR</p>
+            <button type="button" onClick={handleGoogleLogin}>
+              Continue with Google
+            </button>
+          </form>
+        )}
+
+        {mode === "phone" && (
+          <div className="login-form">
+            <input
+              placeholder="Phone number"
+              onChange={(e) => setPhone(e.target.value)}
+            />
+            {otpSent && (
+              <input
+                placeholder="Enter OTP"
+                onChange={(e) => setOtp(e.target.value)}
+              />
+            )}
+            <div id="recaptcha"></div>
+            {!otpSent ? (
+              <button onClick={sendOtp}>Send OTP</button>
+            ) : (
+              <button onClick={verifyOtp}>Verify OTP</button>
+            )}
+          </div>
+        )}
+
+        <p>
+          Don’t have an account?{" "}
+          <a onClick={() => router.push("/signup")} style={{ cursor: "pointer" }}>
+            Sign Up
+          </a>
+        </p>
       </div>
       <Footer />
-      <ToastContainer
-            position="top-right"
-            autoClose={1500}
-            hideProgressBar={false}
-            newestOnTop={false}
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
-            theme="light"
-          />
+      <ToastContainer />
     </div>
   );
 }
