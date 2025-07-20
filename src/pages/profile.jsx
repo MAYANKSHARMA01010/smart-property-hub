@@ -1,191 +1,282 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import '../styles/profile.css';
-import Navbar from '../components/Navbar.jsx';
-import Footer from '../components/Footer.jsx';
+import React, { useState, useEffect } from "react";
+import {
+  auth,
+  db,
+  storage,
+  RecaptchaVerifier,
+} from "../lib/firebase";
+import {
+  signInWithPhoneNumber,
+  onAuthStateChanged,
+} from "firebase/auth";
+import {
+  getDoc,
+  doc,
+  updateDoc,
+} from "firebase/firestore";
+import {
+  ref,
+  uploadBytes,
+  getDownloadURL,
+} from "firebase/storage";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import "../styles/profile.css";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 
-import { auth, db, storage } from '../lib/firebase.js';
-import { onAuthStateChanged, signOut } from 'firebase/auth';
-import { doc, getDoc, updateDoc } from 'firebase/firestore';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { useRouter } from 'next/navigation';
-import { toast } from 'react-toastify';
+const Profile = () => {
+  const [userId, setUserId] = useState(null);
+  const [form, setForm] = useState({
+    fullName: "",
+    bio: "",
+    gender: "",
+    phone: "",
+    photo: "",
+  });
 
-function Profile() {
-  const [user, setUser] = useState(null);
-  const [userData, setUserData] = useState({});
+  const [photoFile, setPhotoFile] = useState(null);
+  const [photoPreview, setPhotoPreview] = useState(null);
   const [editMode, setEditMode] = useState(false);
-  const [phone, setPhone] = useState('');
-  const [location, setLocation] = useState('');
-  const [bio, setBio] = useState('');
-  const [districts, setDistricts] = useState([]);
-  const router = useRouter();
+  const [otpSent, setOtpSent] = useState(false);
+  const [otp, setOtp] = useState("");
+  const [loading, setLoading] = useState(false);
 
+  // Get user ID from Firebase auth
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-      if (currentUser) {
-        setUser(currentUser);
-        const docRef = doc(db, "users", currentUser.uid);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          const data = docSnap.data();
-          setUserData(data);
-          setPhone(data.phone || '');
-          setLocation(data.location || '');
-          setBio(data.bio || '');
-        } else {
-          toast.error("User data not found.");
-        }
-      } else {
-        router.push('/login');
-      }
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) setUserId(user.uid);
     });
-
     return () => unsubscribe();
-  }, [router]);
-  
-  useEffect(() => {
-    setDistricts([
-      "Noida", "Delhi", "Gurugram", "Ghaziabad", "Faridabad", "Greater Noida",
-      "Mumbai", "Pune", "Bangalore", "Hyderabad", "Chennai", "Kolkata",
-      "Lucknow", "Jaipur", "Indore", "Bhopal", "Ahmedabad", "Chandigarh",
-      "Surat", "Nagpur"
-    ]);
   }, []);
 
-  const handleLogout = async () => {
-    await signOut(auth);
-    toast.success("Logged out successfully!");
-    router.push('/');
+  // Fetch user data
+  useEffect(() => {
+    if (!userId) return;
+    const fetchUser = async () => {
+      try {
+        const userRef = doc(db, "users", userId);
+        const userSnap = await getDoc(userRef);
+        if (userSnap.exists()) {
+          const data = userSnap.data();
+          setForm({
+            fullName: data.fullName || "",
+            bio: data.bio || "",
+            gender: data.gender || "",
+            phone: data.phone || "",
+            photo: data.photo || "",
+          });
+          setPhotoPreview(data.photo || null);
+        }
+      } catch (err) {
+        toast.error("Failed to fetch profile");
+      }
+    };
+    fetchUser();
+  }, [userId]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handlePhotoUpload = async (e) => {
+  const handlePhotoChange = (e) => {
     const file = e.target.files[0];
-    if (!file || !user) return;
+    if (!file) return;
+    setPhotoFile(file);
 
-    try {
-      const storageRef = ref(storage, `profilePictures/${user.uid}`);
-      await uploadBytes(storageRef, file);
-      const photoURL = await getDownloadURL(storageRef);
-
-      await updateDoc(doc(db, "users", user.uid), {
-        photoURL,
-      });
-
-      setUserData((prev) => ({ ...prev, photoURL }));
-      toast.success("Profile picture updated!");
-    } catch (error) {
-      console.error("Upload error:", error.message);
-      toast.error("Failed to upload profile photo.");
-    }
+    const reader = new FileReader();
+    reader.onloadend = () => setPhotoPreview(reader.result);
+    reader.readAsDataURL(file);
   };
 
-  const handleProfileUpdate = async () => {
-    try {
-      const userRef = doc(db, "users", user.uid);
-      await updateDoc(userRef, {
-        phone,
-        location,
-        bio,
+  const uploadProfilePhoto = async () => {
+    if (!photoFile) return form.photo;
+    const storageRef = ref(storage, `avatars/${userId}`);
+    await uploadBytes(storageRef, photoFile);
+    return await getDownloadURL(storageRef);
+  };
+
+  const sendOtp = () => {
+    if (!form.phone) return toast.error("Phone number required");
+
+    if (!/^\+?[1-9]\d{7,14}$/.test(form.phone)) {
+      return toast.error("Enter valid phone number with country code");
+    }
+
+    if (!window.recaptchaVerifier) {
+      window.recaptchaVerifier = new RecaptchaVerifier(
+        "recaptcha-container",
+        { size: "invisible", callback: () => sendOtp() },
+        auth
+      );
+    }
+
+    setLoading(true);
+    const appVerifier = window.recaptchaVerifier;
+
+    signInWithPhoneNumber(auth, form.phone, appVerifier)
+      .then((confirmationResult) => {
+        window.confirmationResult = confirmationResult;
+        toast.success("OTP sent");
+        setOtpSent(true);
+        setLoading(false);
+      })
+      .catch(() => {
+        toast.error("Failed to send OTP");
+        setLoading(false);
       });
+  };
 
-      setUserData((prev) => ({
-        ...prev,
-        phone,
-        location,
-        bio,
-      }));
+  const verifyOtpAndSave = async () => {
+    if (!window.confirmationResult) {
+      return toast.error("OTP not requested yet");
+    }
+    setLoading(true);
+    window.confirmationResult
+      .confirm(otp)
+      .then(async () => {
+        await saveProfile(true);
+        setOtp("");
+        setOtpSent(false);
+        setLoading(false);
+      })
+      .catch(() => {
+        toast.error("Invalid OTP");
+        setLoading(false);
+      });
+  };
 
-      toast.success("Profile updated successfully!");
+  const saveProfile = async (verified = false) => {
+    try {
+      setLoading(true);
+      const photoURL = await uploadProfilePhoto();
+      const updatedData = {
+        fullName: form.fullName,
+        bio: form.bio,
+        gender: form.gender,
+        photo: photoURL,
+      };
+      if (verified) {
+        updatedData.phone = form.phone;
+      }
+      await updateDoc(doc(db, "users", userId), updatedData);
+      toast.success("Profile updated!");
       setEditMode(false);
-    } catch (error) {
-      console.error("Update error:", error.message);
-      toast.error("Failed to update profile.");
+    } catch (err) {
+      toast.error("Failed to save profile");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="profile">
+    <div>
       <Navbar />
 
       <div className="profile-container">
-        <h1 className="profile-heading">Welcome to Your Profile</h1>
+        <ToastContainer />
+        <h2 className="profile-title">User Profile</h2>
 
-        <div className="profileInfo">
-          <div className="imageWrapper">
-            <img
-              src={userData.photoURL || "/images/profile.jpg"}
-              alt="Profile"
-              className="profileImage"
-              onClick={() => document.getElementById("photoUpload").click()}
-            />
-            <input
-              type="file"
-              id="photoUpload"
-              accept="image/*"
-              style={{ display: "none" }}
-              onChange={handlePhotoUpload}
-            />
-          </div>
-
-          <div className="profileDetails">
-            <h3>{userData?.fullName || "BahuRani"}</h3>
-            <p><strong>Email:</strong> {user?.email}</p>
-            <p><strong>Phone:</strong> {userData.phone || "N/A"}</p>
-            <p><strong>Location:</strong> {userData.location || "N/A"}</p>
-            <p><strong>Bio:</strong> {userData.bio || "N/A"}</p>
-          </div>
+        <div className="profile-photo-section">
+          <img
+            src={photoPreview || "/default-avatar.png"}
+            alt={form.fullName ? `${form.fullName}'s profile` : "Default avatar"}
+            className="profile-photo"
+          />
+          {editMode && (
+            <input type="file" accept="image/*" onChange={handlePhotoChange} />
+          )}
         </div>
 
-        <div className="profileActions">
-          <button className="editProfile" onClick={() => setEditMode(!editMode)}>
-            {editMode ? "Close Editor" : "Edit Profile"}
-          </button>
-          <button className="logout" onClick={handleLogout}>Logout</button>
-        </div>
-
-        {editMode && (
-          <div className="editProfileForm">
-            <h3>Edit Your Info</h3>
+        <div className="profile-info">
+          <label>
+            Full Name:
             <input
-              type="number"
-              placeholder="Phone"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
+              type="text"
+              name="fullName"
+              value={form.fullName}
+              onChange={handleChange}
+              disabled={!editMode}
             />
-            <select
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
-            >
-              <option value="">Select City</option>
-              {districts.map((city, idx) => (
-                <option key={idx} value={city}>
-                  {city}
-                </option>
-              ))}
-            </select>
+          </label>
+
+          <label>
+            Bio:
             <textarea
-              placeholder="Bio"
-              rows={4}
-              value={bio}
-              onChange={(e) => setBio(e.target.value)}
+              name="bio"
+              value={form.bio}
+              onChange={handleChange}
+              disabled={!editMode}
             />
-            <div className="formButtons">
-              <button onClick={handleProfileUpdate} className="saveChanges">
-                Save Changes
-              </button>
-              <button onClick={() => setEditMode(false)} className="cancelEdit">
-                Cancel
-              </button>
-            </div>
-          </div>
-        )}
-      </div>
+          </label>
 
+          <label>
+            Gender:
+            <select
+              name="gender"
+              value={form.gender}
+              onChange={handleChange}
+              disabled={!editMode}
+            >
+              <option value="">Select</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Prefer not to say">Prefer not to say</option>
+            </select>
+          </label>
+
+          <label>
+            Phone:
+            <input
+              type="tel"
+              name="phone"
+              value={form.phone}
+              onChange={handleChange}
+              disabled={!editMode}
+            />
+          </label>
+
+          {editMode && (
+            <div className="otp-section">
+              <button onClick={sendOtp} disabled={loading}>
+                {loading ? "Sending OTP..." : "Send OTP"}
+              </button>
+
+              {otpSent && (
+                <>
+                  <input
+                    type="text"
+                    value={otp}
+                    onChange={(e) => setOtp(e.target.value)}
+                    placeholder="Enter OTP"
+                  />
+                  <button onClick={verifyOtpAndSave} disabled={loading}>
+                    {loading ? "Verifying..." : "Verify & Save"}
+                  </button>
+                </>
+              )}
+
+              {!otpSent && (
+                <button onClick={() => saveProfile(false)} disabled={loading}>
+                  {loading ? "Saving..." : "Save"}
+                </button>
+              )}
+            </div>
+          )}
+
+          {!editMode && (
+            <button onClick={() => setEditMode(true)}>Edit Profile</button>
+          )}
+        </div>
+
+        <div id="recaptcha-container"></div>
+      </div>
       <Footer />
     </div>
   );
-}
+};
 
 export default Profile;
