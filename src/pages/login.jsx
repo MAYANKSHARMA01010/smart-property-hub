@@ -8,7 +8,7 @@ import toast, { Toaster } from "react-hot-toast";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { FcGoogle } from "react-icons/fc";
-import "../styles/signup.css"; // ✅ Using same style as SignupPage
+import "../styles/signup.css";
 
 export default function Login() {
   const router = useRouter();
