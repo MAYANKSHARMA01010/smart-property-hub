@@ -5,14 +5,12 @@ import { useRouter } from 'next/navigation';
 import "../styles/globals.css";
 import '../styles/Navbar.css';
 
-import { auth, db } from '../lib/firebase.js';
+import { auth } from '../lib/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
-import { doc, getDoc } from 'firebase/firestore';
 
 export default function Navbar() {
   const [darkMode, setDarkMode] = useState(false);
   const [user, setUser] = useState(null);
-  const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
   const router = useRouter();
@@ -27,21 +25,12 @@ export default function Navbar() {
   };
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
-      if (currentUser) {
-        const docRef = doc(db, 'users', currentUser.uid);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          setUserData(docSnap.data());
-        }
-      }
       setLoading(false);
     });
     return () => unsubscribe();
   }, []);
-
-  if (loading) return null;
 
   return (
     <nav className="navbar">
@@ -67,13 +56,16 @@ export default function Navbar() {
         <button className="navLinks" onClick={() => router.push('/about')}>About</button>
         <button className="navLinks" onClick={() => router.push('/all-listing')}>Properties</button>
 
-        {user ? (
+        {loading ? (
+          <div className="navLinks">Loading...</div>
+        ) : user ? (
           <button className="navLinks" onClick={() => router.push('/profile')}>
-            {userData?.fullName?.split(" ")[0] || "Profile"}
+            {user.displayName?.split(" ")[0] || "Profile"}
           </button>
         ) : (
           <button className="navLinks loginBtn" onClick={() => router.push('/login')}>Login</button>
         )}
+
         <button
           className={`darkModeToggle ${darkMode ? 'active' : ''}`}
           onClick={toggleDarkMode}
@@ -82,7 +74,6 @@ export default function Navbar() {
           {darkMode ? "☀️" : "🌙"}
         </button>
       </div>
-      
     </nav>
   );
 }

@@ -1,77 +1,202 @@
+/* profile.css */
+
+/* Container */
 .profile-container {
-  max-width: 700px;
-  margin: 4rem auto;
+  max-width: 600px;
+  margin: 80px auto 40px;
   padding: 2rem;
-  background-color: #f6f6f6;
-  border-radius: 12px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+  background-color: #ffffff;
+  border-radius: 1rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  transition: background-color 0.3s ease;
 }
 
+/* Title */
 .profile-title {
   text-align: center;
-  margin-bottom: 1.5rem;
   font-size: 2rem;
+  margin-bottom: 2rem;
   font-weight: bold;
-  color: #333;
+  color: #1f2937;
 }
 
+/* Photo Section */
 .profile-photo-section {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 1rem;
+  margin-bottom: 2rem;
 }
 
 .profile-photo {
   width: 120px;
   height: 120px;
-  object-fit: cover;
   border-radius: 50%;
-  border: 2px solid #ccc;
+  object-fit: cover;
+  border: 3px solid #4f46e5;
   margin-bottom: 1rem;
 }
 
-.profile-info {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
+/* Inputs */
 .profile-info label {
-  display: flex;
-  flex-direction: column;
-  font-weight: 600;
-  color: #444;
+  display: block;
+  margin-bottom: 1rem;
+  color: #374151;
+  font-weight: 500;
 }
 
 .profile-info input,
-.profile-info textarea,
 .profile-info select {
-  padding: 0.6rem;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  margin-top: 0.3rem;
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
   font-size: 1rem;
-  background-color: white;
+  margin-top: 0.4rem;
+  background-color: #f9fafb;
+  transition: border-color 0.2s, background-color 0.2s;
 }
 
-.profile-info button {
-  padding: 0.6rem 1.2rem;
-  background-color: #7b5cd6;
-  color: white;
-  border: none;
-  border-radius: 8px;
+.profile-info input:focus,
+.profile-info select:focus {
+  outline: none;
+  border-color: #4f46e5;
+}
+
+/* OTP Section */
+.otp-section {
+  margin-bottom: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.otp-section input {
+  flex: 1;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
   font-size: 1rem;
+  background-color: #f9fafb;
+}
+
+.otp-section input:focus {
+  outline: none;
+  border-color: #4f46e5;
+}
+
+/* Buttons */
+button {
+  padding: 0.6rem 1.2rem;
+  background-color: #4f46e5;
+  color: #fff;
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: 600;
   cursor: pointer;
   transition: background-color 0.3s;
 }
 
-.profile-info button:hover {
-  background-color: #6444c1;
+button:hover {
+  background-color: #4338ca;
 }
 
-.otp-section {
+/* Button Group */
+.button-group {
   display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.cancel-button {
+  background-color: transparent;
+  border: 1px solid #999;
+  color: #999;
+  padding: 0.6rem 1.2rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.cancel-button:hover {
+  background-color: #f3f4f6;
+  color: #333;
+  border-color: #666;
+}
+
+/* Dark Mode */
+body.dark .profile-container {
+  background-color: #1f2937;
+  color: #f3f4f6;
+}
+
+body.dark .profile-title {
+  color: #f9fafb;
+}
+
+body.dark .profile-info label {
+  color: #e5e7eb;
+}
+
+body.dark .profile-info input,
+body.dark .profile-info select {
+  background-color: #374151;
+  color: #f9fafb;
+  border-color: #4b5563;
+}
+
+body.dark .profile-info input:focus,
+body.dark .profile-info select:focus {
+  border-color: #818cf8;
+}
+
+body.dark .otp-section input {
+  background-color: #374151;
+  color: #f9fafb;
+  border-color: #4b5563;
+}
+
+body.dark button {
+  background-color: #6366f1;
+}
+
+body.dark button:hover {
+  background-color: #4f46e5;
+}
+
+body.dark .cancel-button {
+  background-color: transparent;
+  border-color: #6b7280;
+  color: #d1d5db;
+}
+
+body.dark .cancel-button:hover {
+  background-color: #374151;
+  color: #f9fafb;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .profile-container {
+    margin: 60px 1rem;
+    padding: 1.5rem;
+  }
+
+  .otp-section {
+    flex-direction: column;
+  }
+
+  .otp-section input,
+  .otp-section button {
+    width: 100%;
+  }
+
+  .button-group {
+    flex-direction: column;
+  }
+
+  .button-group button {
+    width: 100%;
+  }
 }

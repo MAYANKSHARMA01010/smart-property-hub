@@ -1,5 +1,5 @@
-import '../styles/globals.css';
-import { ToastContainer } from '../components/toastifyData.jsx';
+import "../styles/globals.css";
+import { ToastContainer } from "../components/toastifyData.jsx";
 import "react-toastify/dist/ReactToastify.css";
 
 export const metadata = {
@@ -12,7 +12,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className="antialiased">
         {children}
-        <ToastContainer />
+        <ToastContainer position="top-right" autoClose={3000} />
       </body>
     </html>
   );

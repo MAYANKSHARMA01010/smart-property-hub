@@ -2,163 +2,97 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import {
-  auth,
-  googleProvider,
-  RecaptchaVerifier
-} from "../lib/firebase";
-import {
-  signInWithEmailAndPassword,
-  signInWithPopup,
-  signInWithPhoneNumber,
-} from "firebase/auth";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import "../styles/Login.css";
-
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../lib/firebase";
+import toast, { Toaster } from "react-hot-toast";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { FcGoogle } from "react-icons/fc";
-import { BsTelephone } from "react-icons/bs";
+import "../styles/signup.css"; // ✅ Using same style as SignupPage
 
 export default function Login() {
-  const [mode, setMode] = useState("email");
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  const [phone, setPhone] = useState("");
-  const [otp, setOtp] = useState("");
-  const [otpSent, setOtpSent] = useState(false);
-
-  const router = useRouter();
 
   const handleEmailLogin = async (e) => {
     e.preventDefault();
 
+    if (!email || !password) {
+      toast.error("Please fill in all fields");
+      return;
+    }
+
     try {
       await signInWithEmailAndPassword(auth, email, password);
       toast.success("Login successful!");
-      setTimeout(() => router.push("/"), 1500);
+      router.push("/");
     } catch (error) {
       const errors = {
         "auth/invalid-credential": "Invalid credentials",
         "auth/user-not-found": "User not found",
         "auth/wrong-password": "Incorrect password",
       };
-      toast.error(errors[error.code] || error.message);
+      toast.error(errors[error.code] || "Login failed");
     }
   };
 
-  const handleGoogleLogin = async () => {
-    try {
-      await signInWithPopup(auth, googleProvider);
-      toast.success("Google login successful!");
-      setTimeout(() => router.push("/"), 1500);
-    } catch (error) {
-      toast.error("Google login failed!");
-    }
+  const handleGoogleLogin = () => {
+    toast.error("Google Sign-In not available yet.");
   };
 
-  const sendOtp = () => {
-    if (!phone) {
-      toast.error("Enter your phone number.");
-      return;
-    }
-
-    window.recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha", {
-      size: "invisible",
-    });
-
-    const appVerifier = window.recaptchaVerifier;
-
-    signInWithPhoneNumber(auth, "+91" + phone, appVerifier)
-      .then((confirmationResult) => {
-        window.confirmationResult = confirmationResult;
-        setOtpSent(true);
-        toast.success("OTP sent!");
-      })
-      .catch(() => {
-        toast.error("Failed to send OTP");
-      });
-  };
-
-  const verifyOtp = () => {
-    window.confirmationResult
-      .confirm(otp)
-      .then(() => {
-        toast.success("Phone login successful!");
-        setTimeout(() => router.push("/"), 1500);
-      })
-      .catch(() => {
-        toast.error("Invalid OTP");
-      });
+  const handlePhoneLogin = () => {
+    toast.error("Phone Sign-In not implemented.");
   };
 
   return (
-    <div className="login-page">
+    <>
+      <Toaster position="top-right" />
       <Navbar />
-      <div className="login-container">
-        <div className="login-mode-buttons">
-          <button onClick={() => setMode("email")} className={mode === "email" ? "active" : ""}>
-            <FcGoogle size={22} /> Email
-          </button>
-          <button onClick={() => setMode("phone")} className={mode === "phone" ? "active" : ""}>
-            <BsTelephone size={18} /> Phone
-          </button>
-        </div>
 
-        {mode === "email" && (
-          <form onSubmit={handleEmailLogin} className="login-form">
+      <main className="signup-page">
+        <div className="signup-container">
+          <h2>Log In</h2>
+
+          <form onSubmit={handleEmailLogin}>
             <input
               type="email"
-              placeholder="Email"
+              placeholder="Email address"
+              value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
             />
             <input
               type="password"
               placeholder="Password"
+              value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
             />
             <button type="submit">Login</button>
-            <p className="or-divider">OR</p>
-            <button type="button" onClick={handleGoogleLogin}>
-              Continue with Google
-            </button>
           </form>
-        )}
 
-        {mode === "phone" && (
-          <div className="login-form">
-            <input
-              placeholder="Phone number"
-              onChange={(e) => setPhone(e.target.value)}
-            />
-            {otpSent && (
-              <input
-                placeholder="Enter OTP"
-                onChange={(e) => setOtp(e.target.value)}
-              />
-            )}
-            <div id="recaptcha"></div>
-            {!otpSent ? (
-              <button onClick={sendOtp}>Send OTP</button>
-            ) : (
-              <button onClick={verifyOtp}>Verify OTP</button>
-            )}
-          </div>
-        )}
+          <div className="divider">OR</div>
 
-        <p>
-          Don’t have an account?{" "}
-          <a onClick={() => router.push("/signup")} style={{ cursor: "pointer" }}>
-            Sign Up
-          </a>
-        </p>
-      </div>
+          <button type="button" onClick={handleGoogleLogin} className="google-button">
+            <FcGoogle size={20} />
+            Continue with Google
+          </button>
+
+          <button type="button" onClick={handlePhoneLogin} className="phone-button">
+            📱 Continue with Phone
+          </button>
+
+          <p className="login-link">
+            Don’t have an account?{" "}
+            <span className="link" onClick={() => router.push("/signup")}>
+              Sign Up
+            </span>
+          </p>
+        </div>
+      </main>
+
       <Footer />
-      <ToastContainer />
-    </div>
+    </>
   );
 }
