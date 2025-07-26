@@ -1,336 +1,289 @@
-"use client";
+'use client';
 
-import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import React, { useEffect, useState, useRef } from 'react';
+import { useRouter } from 'next/navigation';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
 import {
-  auth,
-  db,
-  storage,
-} from "../lib/firebase";
-import {
-  onAuthStateChanged,
-  signInWithPhoneNumber,
-  RecaptchaVerifier,
-} from "firebase/auth";
-import {
-  getDoc,
   doc,
+  getDoc,
   updateDoc,
-} from "firebase/firestore";
-import {
-  ref,
-  uploadBytes,
-  getDownloadURL,
-} from "firebase/storage";
-import toast, { Toaster } from "react-hot-toast";
-import "../styles/profile.css";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+  serverTimestamp,
+} from 'firebase/firestore';
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import toast, { Toaster } from 'react-hot-toast';
+
+import { auth, db, storage } from '../lib/firebase';
+import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
+import '../styles/profile.css';
 
 export default function Profile() {
   const router = useRouter();
-
+  const [user, setUser] = useState(null);
+  const [checkingAuth, setCheckingAuth] = useState(true);
   const [form, setForm] = useState({
-    fullName: "",
-    phone: "",
-    gender: "",
-    photo: "",
+    fullName: '',
+    phone: '',
+    avatar: '',
   });
-  const [originalForm, setOriginalForm] = useState(null);
-  const [photoPreview, setPhotoPreview] = useState("");
-  const [userId, setUserId] = useState(null);
-  const [userEmail, setUserEmail] = useState("");
-  const [userCreatedAt, setUserCreatedAt] = useState("");
-  const [otpSent, setOtpSent] = useState(false);
-  const [otp, setOtp] = useState("");
-  const [phoneConfirmed, setPhoneConfirmed] = useState(false);
-  const [confirmationResult, setConfirmationResult] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [preview, setPreview] = useState(null);
+  const fileInputRef = useRef(null);
+
+  const [otpSent, setOtpSent] = useState(false);
+  const [otp, setOtp] = useState('');
+  const [phoneConfirmed, setPhoneConfirmed] = useState(false);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (!user) {
-        toast.error("Please login first.");
-        router.push("/login");
-        return;
-      }
-
-      if (!navigator.onLine) {
-        toast.error("You're offline. Check your internet connection.");
-        return;
-      }
-
-      setUserId(user.uid);
-      setUserEmail(user.email || "");
-      setUserCreatedAt(new Date(user.metadata.creationTime).toLocaleString());
-
-      try {
-        const docRef = doc(db, "users", user.uid);
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      setCheckingAuth(false);
+      if (firebaseUser) {
+        const docRef = doc(db, 'users', firebaseUser.uid);
         const docSnap = await getDoc(docRef);
+
         if (docSnap.exists()) {
-          const data = docSnap.data();
-          console.log("Firestore user data:", data);
+          setUser(firebaseUser);
           setForm({
-            fullName: data.fullName || data.name || "",
-            phone: data.phone || "",
-            gender: data.gender || "",
-            photo: data.photo || "",
+            fullName: docSnap.data().fullName || '',
+            phone: docSnap.data().phone || '',
+            avatar: docSnap.data().avatar || '',
           });
-          setOriginalForm({
-            fullName: data.fullName || data.name || "",
-            phone: data.phone || "",
-            gender: data.gender || "",
-            photo: data.photo || "",
-          });
-        } else {
-          toast.error("No user data found in Firestore.");
         }
-      } catch (err) {
-        console.error("Firestore fetch failed:", err);
-        toast.error("Failed to fetch profile.");
+      } else {
+        router.push('/');
       }
     });
 
     return () => unsubscribe();
   }, [router]);
 
-  const handlePhotoChange = async (e) => {
-    const file = e.target.files[0];
-    if (!file || !userId) return;
-
-    try {
-      setPhotoPreview(URL.createObjectURL(file));
-      const fileRef = ref(storage, `avatars/${userId}`);
-      await uploadBytes(fileRef, file);
-      const photoURL = await getDownloadURL(fileRef);
-
-      setForm((prev) => ({ ...prev, photo: photoURL }));
-      toast.success("Photo uploaded successfully!");
-    } 
-    catch (err) {
-      console.error("Photo upload failed:", err);
-      toast.error("Failed to upload photo.");
-    }
+  const handleEdit = () => setIsEditing(true);
+  const handleCancel = () => {
+    setIsEditing(false);
+    setOtpSent(false);
+    setOtp('');
+    setPhoneConfirmed(false);
+    toast('Edit cancelled');
   };
 
-  const handleSendOTP = async () => {
-    if (!form.phone.trim()) {
-      toast.error("Enter a valid phone number first.");
-      return;
-    }
-
+  const handleSave = async () => {
+    if (!user) return;
     try {
-      if (window.recaptchaVerifier) {
-        window.recaptchaVerifier.clear();
-      }
-
-      window.recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha-container", {
-        size: "invisible",
-      });
-
-      const appVerifier = window.recaptchaVerifier;
-      const formattedPhone = form.phone.startsWith("+") ? form.phone : "+91" + form.phone;
-      const result = await signInWithPhoneNumber(auth, formattedPhone, appVerifier);
-      setConfirmationResult(result);
-      setOtpSent(true);
-      toast.success("OTP sent!");
-    } catch (err) {
-      console.error(err);
-      toast.error("Failed to send OTP. Try again.");
-    }
-  };
-
-  const handleVerifyOTP = async () => {
-    if (!confirmationResult) return toast.error("OTP flow not initialized.");
-
-    try {
-      await confirmationResult.confirm(otp);
-      setPhoneConfirmed(true);
-      toast.success("Phone number verified!");
-    } catch (error) {
-      console.error(error);
-      toast.error("Invalid OTP");
-    }
-  };
-
-  const handleUpdate = async () => {
-    if (!userId) return toast.error("User not logged in.");
-
-    if (form.phone.trim() && form.phone !== originalForm?.phone && !phoneConfirmed) {
-      return toast.error("Please verify your new phone number before saving.");
-    }
-
-    try {
-      const updateData = {
-        fullName: form.fullName || null,
-        name: form.fullName || null,
-        gender: form.gender || null,
-        photo: form.photo || null,
-        phone: form.phone.trim() || null,
+      const updates = {
+        fullName: form.fullName,
+        updatedAt: serverTimestamp(),
       };
 
-      await updateDoc(doc(db, "users", userId), updateData);
+      if (preview) {
+        const avatarRef = ref(storage, `avatars/${user.uid}`);
+        await uploadBytes(avatarRef, preview);
+        const downloadURL = await getDownloadURL(avatarRef);
+        updates.avatar = downloadURL;
+        toast.success('🖼️ Profile photo updated');
+      }
 
-      toast.success("Profile updated!");
+      await updateDoc(doc(db, 'users', user.uid), updates);
+      toast.success('✅ Profile updated successfully!');
       setIsEditing(false);
-      setPhotoPreview("");
-      setPhoneConfirmed(false);
       setOtpSent(false);
-      setOriginalForm({ ...form });
+      setOtp('');
+      setPhoneConfirmed(false);
     } catch (err) {
-      console.error("Update failed:", err);
-      toast.error("Failed to update profile.");
+      toast.error('❌ Failed to update profile.');
+      console.error(err);
     }
   };
 
-  const handleCancel = () => {
-    if (originalForm) {
-      setForm({ ...originalForm });
-    }
-    setIsEditing(false);
-    setPhotoPreview("");
-    setPhoneConfirmed(false);
-    setOtpSent(false);
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    if (name === 'phone' && value.length > 10) return;
+    setForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
+
+  const handleAvatarChange = (e) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setPreview(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setForm((prev) => ({
+          ...prev,
+          avatar: reader.result,
+        }));
+      };
+      reader.readAsDataURL(file);
+      toast.success('🖼️ Profile photo selected');
+    }
+  };
+
+  const handleSendOtp = () => {
+    if (!form.phone.trim()) {
+      toast.error('📱 Enter phone number first');
+      return;
+    }
+    toast.success('📤 OTP sent (demo only)');
+    setOtpSent(true);
+  };
+
+  const handleVerifyOtp = () => {
+    if (!otp.trim()) {
+      toast.error('🔒 Enter OTP');
+      return;
+    }
+    toast.success('✅ Phone number verified (demo)');
+    setPhoneConfirmed(true);
+  };
+
+  const handleLogout = async () => {
+    await signOut(auth);
+    toast.success('👋 Logged out');
+    router.push('/');
+  };
+
+  if (checkingAuth) {
+    return <div className="text-center py-10">Checking authentication...</div>;
+  }
 
   return (
     <>
-      <Toaster position="top-center" />
       <Navbar />
-      <div className="profile-container">
-        <h2 className="profile-title">Your Profile</h2>
+      <Toaster position="top-center" />
 
-        <div className="profile-photo-section">
-          <img
-            src={photoPreview || form.photo || "/ProfileImg.png"}
-            alt="Profile"
-            className="profile-photo"
-            onError={(e) => {
-              e.target.onerror = null;
-              e.target.src = "/ProfileImg.png";
-            }}
-          />
-
-          {isEditing && (
-            <div className="photo-upload-wrapper">
-              <label htmlFor="photoInput" className="upload-button">
-                Upload Photo
-              </label>
-              <input
-                type="file"
-                id="photoInput"
-                onChange={handlePhotoChange}
-                style={{ display: "none" }}
-              />
-            </div>
-          )}
-        </div>
-
-        <div className="profile-info">
-          <label>
-            Full Name
-            <input
-              type="text"
-              value={form.fullName}
-              readOnly={!isEditing}
-              onChange={(e) => setForm({ ...form, fullName: e.target.value })}
-            />
-          </label>
-
-          <label>
-            Phone Number
-            <input
-              type="tel"
-              value={form.phone}
-              readOnly={!isEditing}
-              onChange={(e) => {
-                setForm({ ...form, phone: e.target.value });
-                setPhoneConfirmed(false);
-              }}
-            />
-          </label>
-
-          {!phoneConfirmed && isEditing && (
-            <div className="otp-section">
-              <div id="recaptcha-container"></div>
-              {!otpSent ? (
-                <button onClick={handleSendOTP}>Send OTP</button>
-              ) : (
-                <>
-                  <input
-                    type="text"
-                    placeholder="Enter OTP"
-                    value={otp}
-                    onChange={(e) => setOtp(e.target.value)}
-                  />
-                  <button onClick={handleVerifyOTP}>Verify OTP</button>
-                </>
-              )}
-            </div>
-          )}
-
-          <label>
-            Gender
-            <select
-              value={form.gender}
-              disabled={!isEditing}
-              onChange={(e) => setForm({ ...form, gender: e.target.value })}
-            >
-              <option value="">None</option>
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-              <option value="Prefer not to say">Prefer not to say</option>
-            </select>
-          </label>
-
-          <label>
-            Email
-            <input type="email" value={userEmail} readOnly />
-          </label>
-
-          <label>
-            Account Created At
-            <input type="text" value={userCreatedAt} readOnly />
-          </label>
-
-          <div className="button-group">
+      <main>
+        <div className="header-row">
+          <h2>Profile</h2>
+          <div className="action-buttons">
             <button
-              onClick={() => (isEditing ? handleUpdate() : setIsEditing(true))}
+              className="btn-primary"
+              onClick={() => toast('❤️ Wishlist feature coming soon')}
             >
-              {isEditing ? "Save Changes" : "Edit"}
+              ❤️ Wishlist
             </button>
-
-            {isEditing && (
-              <button className="cancel-button" onClick={handleCancel}>
-                Cancel
-              </button>
-            )}
-
-            <button
-              className="wishlist-button"
-              onClick={() => router.push("/wishlist")}
-            >
-              Wishlist
-            </button>
-
-            <button
-              className="logout-button"
-              onClick={async () => {
-                try {
-                  await auth.signOut();
-                  toast.success("Logged out successfully.");
-                  router.push("/");
-                } catch (err) {
-                  console.error("Logout failed:", err);
-                  toast.error("Logout failed. Try again.");
-                }
-              }}
-            >
+            <button onClick={handleLogout} className="btn-secondary">
               Logout
             </button>
           </div>
         </div>
-      </div>
+
+        <div className="profile-avatar-row">
+          <div className="avatar-box">
+            {form.avatar ? (
+              <img
+                src={preview ? URL.createObjectURL(preview) : form.avatar}
+                alt="avatar"
+                className="avatar-img"
+              />
+            ) : (
+              <div className="avatar-placeholder">No Avatar</div>
+            )}
+          </div>
+          {isEditing && (
+            <button
+              className="btn-text"
+              onClick={() => fileInputRef.current?.click()}
+            >
+              Change Photo
+            </button>
+          )}
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            onChange={handleAvatarChange}
+          />
+        </div>
+
+        <div className="space-y-4">
+          <div>
+            <label>Full Name</label>
+            <input
+              type="text"
+              name="fullName"
+              value={form.fullName}
+              onChange={handleChange}
+              disabled={!isEditing}
+              className="form-control"
+            />
+          </div>
+
+          <div>
+            <label>Phone Number (Optional)</label>
+            <input
+              type="tel"
+              name="phone"
+              value={form.phone || ''}
+              onChange={handleChange}
+              disabled={!isEditing}
+              className="form-control"
+              placeholder="Enter 10-digit number"
+              maxLength={10}
+            />
+            {isEditing && !phoneConfirmed && (
+              <div className="mt-2">
+                <button onClick={handleSendOtp} className="btn-text">
+                  Send OTP
+                </button>
+              </div>
+            )}
+          </div>
+
+          {isEditing && otpSent && !phoneConfirmed && (
+            <div>
+              <label>Enter OTP</label>
+              <input
+                type="text"
+                value={otp}
+                onChange={(e) => setOtp(e.target.value)}
+                className="form-control mt-1"
+              />
+              <button onClick={handleVerifyOtp} className="btn-text mt-2">
+                Verify OTP
+              </button>
+            </div>
+          )}
+
+          <div>
+            <label>Email</label>
+            <input
+              type="email"
+              value={user?.email || ''}
+              disabled
+              className="form-control"
+            />
+          </div>
+
+          <div>
+            <label>Account Created</label>
+            <input
+              type="text"
+              value={user?.metadata?.creationTime || ''}
+              disabled
+              className="form-control"
+            />
+          </div>
+        </div>
+
+        <div className="action-buttons mt-6">
+          {isEditing ? (
+            <>
+              <button onClick={handleSave} className="btn-primary">
+                Save Changes
+              </button>
+              <button onClick={handleCancel} className="btn-secondary">
+                Cancel
+              </button>
+            </>
+          ) : (
+            <button onClick={handleEdit} className="btn-primary">
+              Edit Profile
+            </button>
+          )}
+        </div>
+      </main>
+
       <Footer />
     </>
   );
