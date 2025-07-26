@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import '../styles/AllListing.css';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import PropertyCard from '../components/PropertyCard';
 import propertiesData from '../data/properties.json';
 
 export default function AllListing() {
@@ -148,42 +149,7 @@ export default function AllListing() {
         {/* Properties Grid */}
         <div className="property-grid">
           {currentItems.length > 0 ? currentItems.map(property => (
-            <div className="property-card" key={property.id}>
-              <img
-                className="property-image"
-                src={property.image || '/default-property.jpg'}
-                alt={property.title}
-              />
-
-              <div className="property-details">
-                <h2 className="property-title">{property.title}</h2>
-                <p className="property-meta">
-                  {property.city}, {property.location.state} | {property.propertyType}
-                </p>
-
-                <div className="cards">
-                  <div className="card">₹{property.price.toLocaleString()}</div>
-                  <div className="card">{property.sizeSqFt} sqft</div>
-                  <div className="card">{property.bedrooms} Bed / {property.bathrooms} Bath</div>
-                </div>
-
-                <div className="badges">
-                  {property.amenities.slice(0, 3).map((a, i) => (
-                    <span className="badge" key={i}>{a}</span>
-                  ))}
-                  {property.amenities.length > 3 && (
-                    <span className="badge">+{property.amenities.length - 3} more</span>
-                  )}
-                  {property.amenities.includes("Ready to Move") && (
-                    <span className="badge highlight">Ready to Move</span>
-                  )}
-                </div>
-
-                <p className="agent-info">
-                  <strong>Agent:</strong> {property.agent.name} | {property.agent.phone}
-                </p>
-              </div>
-            </div>
+            <PropertyCard key={property.id} property={property} />
           )) : (
             <p className="no-results">No properties match your filters.</p>
           )}

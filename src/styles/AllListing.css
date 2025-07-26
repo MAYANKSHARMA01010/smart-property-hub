@@ -12,14 +12,16 @@ body.dark {
   color: #eee;
 }
 
-/* Titles */
+.all-listing {
+  padding-bottom: 2rem;
+}
+
 .title {
   text-align: center;
   margin: 2rem auto 1rem;
   font-size: 2rem;
 }
 
-/* Filters */
 .filters {
   display: flex;
   flex-wrap: wrap;
@@ -40,9 +42,17 @@ body.dark {
   color: white;
   border: none;
   cursor: pointer;
+  border-radius: 6px;
 }
 
-/* Grid */
+.filters button:not(.reset) {
+  background-color: #3f51b5;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
 .property-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -62,108 +72,6 @@ body.dark {
   }
 }
 
-/* Card */
-.property-card {
-  background: #fff;
-  border-radius: 1rem;
-  overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  transition: transform 0.3s ease;
-}
-
-body.dark .property-card {
-  background: #1e1e1e;
-}
-
-.property-card:hover {
-  transform: translateY(-5px);
-}
-
-.property-image {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-}
-
-.property-details {
-  padding: 1rem;
-}
-
-.property-title {
-  font-size: 1.25rem;
-  margin: 0.5rem 0;
-}
-
-.property-meta {
-  font-size: 0.9rem;
-  color: #666;
-}
-
-body.dark .property-meta {
-  color: #aaa;
-}
-
-.cards {
-  display: flex;
-  gap: 0.5rem;
-  margin-top: 0.75rem;
-}
-
-.card {
-  background: #f0f0f0;
-  padding: 0.4rem 0.7rem;
-  border-radius: 0.5rem;
-  font-size: 0.85rem;
-}
-
-body.dark .card {
-  background: #2c2c2c;
-  color: #ddd;
-}
-
-/* Amenities */
-.badges {
-  margin-top: 0.5rem;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
-}
-
-.badge {
-  background: #eee;
-  color: #444;
-  padding: 0.3rem 0.6rem;
-  border-radius: 999px;
-  font-size: 0.75rem;
-}
-
-body.dark .badge {
-  background: #333;
-  color: #ccc;
-}
-
-.badge.highlight {
-  background: #4caf50;
-  color: #fff;
-}
-
-body.dark .badge.highlight {
-  background: #66bb6a;
-  color: #fff;
-}
-
-/* Agent Info */
-.agent-info {
-  margin-top: 1rem;
-  font-size: 0.85rem;
-  color: #555;
-}
-
-body.dark .agent-info {
-  color: #bbb;
-}
-
-/* Pagination */
 .pagination {
   display: flex;
   justify-content: center;
@@ -194,4 +102,16 @@ body.dark .pagination button {
   text-align: center;
   margin-top: 2rem;
   font-style: italic;
+}
+
+body.dark .filters select,
+body.dark .filters button,
+body.dark .filters .reset {
+  background: #2c2c2c;
+  color: #ddd;
+  border: none;
+}
+
+body.dark .filters .reset {
+  background-color: #b91c1c;
 }

@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { useRouter } from 'next/navigation';
+import toast from 'react-hot-toast';
 import '../styles/PropertyCard.css';
 
 export default function PropertyCard({ property }) {
@@ -11,8 +12,19 @@ export default function PropertyCard({ property }) {
     router.push(`/property/${property.id}`);
   };
 
+  const handleWishlistClick = (e) => {
+    e.stopPropagation(); // Prevent card click
+    toast('💖 Wishlist feature coming soon!');
+  };
+
   return (
-    <div className="property-card" onClick={handleClick} role="button" tabIndex={0} onKeyPress={e => e.key === 'Enter' && handleClick()}>
+    <div
+      className="property-card"
+      onClick={handleClick}
+      role="button"
+      tabIndex={0}
+      onKeyPress={(e) => e.key === 'Enter' && handleClick()}
+    >
       <img
         src={property.image || '/images/default.jpg'}
         alt={property.title}
@@ -30,6 +42,9 @@ export default function PropertyCard({ property }) {
             </span>
           ))}
         </div>
+        <button className="wishlist-button" onClick={handleWishlistClick}>
+          ❤️ Add to Wishlist
+        </button>
       </div>
     </div>
   );
