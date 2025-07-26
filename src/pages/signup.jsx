@@ -4,11 +4,9 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   createUserWithEmailAndPassword,
-  GoogleAuthProvider,
-  signInWithPopup,
 } from "firebase/auth";
 import { auth, db } from "../lib/firebase";
-import { doc, setDoc, serverTimestamp } from "firebase/firestore"; // 🔧 serverTimestamp added
+import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 import toast, { Toaster } from "react-hot-toast";
 import { FcGoogle } from "react-icons/fc";
 import Navbar from "../components/Navbar";
@@ -25,7 +23,7 @@ export default function SignupPage() {
     e.preventDefault();
 
     if (!name || !email || !password) {
-      toast.error("Please fill in all fields");
+      toast.error("⚠️ Please fill in all fields");
       return;
     }
 
@@ -33,11 +31,9 @@ export default function SignupPage() {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
-      toast.success("Signup successful!");
-      router.push("/");
-      
       await setDoc(doc(db, "users", user.uid), {
         uid: user.uid,
+        fullName: name,
         name: name,
         email: user.email,
         phone: "No Data",
@@ -45,23 +41,34 @@ export default function SignupPage() {
         createdAt: serverTimestamp(),
       });
 
+      toast.success("🎉 Signup successful!");
+      setTimeout(() => {
+        router.push("/");
+      }, 1500);
     } catch (error) {
       console.error("Signup error:", error);
-      toast.error(error.message || "Signup failed");
+
+      if (error.code === "auth/email-already-in-use") {
+        toast.error("🚫 This email is already in use. Try logging in.");
+      } else if (error.code === "auth/weak-password") {
+        toast.error("🔐 Password should be at least 6 characters.");
+      } else {
+        toast.error(`❌ ${error.message}`);
+      }
     }
   };
 
-  const handleGoogleSignup = async () => {
-    toast.error("Google Sign-In not available yet.");
+  const handleGoogleSignup = () => {
+    toast("⚠️ Google Sign-In is coming soon!", { icon: "🔧" });
   };
 
-  const handlePhoneSignup = async () => {
-    toast.error("Phone Sign-Up not implemented.");
+  const handlePhoneSignup = () => {
+    toast("📱 Phone Sign-Up coming soon!", { icon: "⌛" });
   };
 
   return (
     <>
-      <Toaster position="top-right" />
+      <Toaster position="top-right" reverseOrder={false} />
       <Navbar />
 
       <main className="signup-page">

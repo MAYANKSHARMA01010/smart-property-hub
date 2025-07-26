@@ -1,5 +1,5 @@
 .signup-page {
-  min-height: calc(100vh - 160px); /* Adjust if navbar/footer size differs */
+  min-height: calc(100vh - 160px);
   display: flex;
   justify-content: center;
   align-items: center;

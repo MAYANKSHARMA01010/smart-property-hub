@@ -6,11 +6,11 @@ import {
   auth,
   db,
   storage,
-  Recaptcha as RecaptchaVerifier,
 } from "../lib/firebase";
 import {
-  signInWithPhoneNumber,
   onAuthStateChanged,
+  signInWithPhoneNumber,
+  RecaptchaVerifier,
 } from "firebase/auth";
 import {
   getDoc,
@@ -22,8 +22,7 @@ import {
   uploadBytes,
   getDownloadURL,
 } from "firebase/storage";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import toast, { Toaster } from "react-hot-toast";
 import "../styles/profile.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -70,19 +69,25 @@ export default function Profile() {
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
           const data = docSnap.data();
+          console.log("Firestore user data:", data);
           setForm({
-            fullName: data.fullName || "",
+            fullName: data.fullName || data.name || "",
             phone: data.phone || "",
             gender: data.gender || "",
             photo: data.photo || "",
           });
-          setOriginalForm(data);
+          setOriginalForm({
+            fullName: data.fullName || data.name || "",
+            phone: data.phone || "",
+            gender: data.gender || "",
+            photo: data.photo || "",
+          });
         } else {
-          toast.warn("No user data found in Firestore.");
+          toast.error("No user data found in Firestore.");
         }
       } catch (err) {
         console.error("Firestore fetch failed:", err);
-        toast.error("Failed to fetch profile. Try again later.");
+        toast.error("Failed to fetch profile.");
       }
     });
 
@@ -99,9 +104,10 @@ export default function Profile() {
       await uploadBytes(fileRef, file);
       const photoURL = await getDownloadURL(fileRef);
 
-      setForm((prevForm) => ({ ...prevForm, photo: photoURL }));
+      setForm((prev) => ({ ...prev, photo: photoURL }));
       toast.success("Photo uploaded successfully!");
-    } catch (err) {
+    } 
+    catch (err) {
       console.error("Photo upload failed:", err);
       toast.error("Failed to upload photo.");
     }
@@ -109,7 +115,7 @@ export default function Profile() {
 
   const handleSendOTP = async () => {
     if (!form.phone.trim()) {
-      toast.info("Enter a valid phone number first.");
+      toast.error("Enter a valid phone number first.");
       return;
     }
 
@@ -120,7 +126,6 @@ export default function Profile() {
 
       window.recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha-container", {
         size: "invisible",
-        callback: () => {},
       });
 
       const appVerifier = window.recaptchaVerifier;
@@ -158,16 +163,13 @@ export default function Profile() {
     try {
       const updateData = {
         fullName: form.fullName || null,
+        name: form.fullName || null,
         gender: form.gender || null,
         photo: form.photo || null,
+        phone: form.phone.trim() || null,
       };
 
-      if (form.phone.trim()) {
-        updateData.phone = form.phone;
-      }
-
-      const userRef = doc(db, "users", userId);
-      await updateDoc(userRef, updateData);
+      await updateDoc(doc(db, "users", userId), updateData);
 
       toast.success("Profile updated!");
       setIsEditing(false);
@@ -183,12 +185,7 @@ export default function Profile() {
 
   const handleCancel = () => {
     if (originalForm) {
-      setForm({
-        fullName: originalForm.fullName || "",
-        phone: originalForm.phone || "",
-        gender: originalForm.gender || "",
-        photo: originalForm.photo || "",
-      });
+      setForm({ ...originalForm });
     }
     setIsEditing(false);
     setPhotoPreview("");
@@ -197,7 +194,8 @@ export default function Profile() {
   };
 
   return (
-    <div>
+    <>
+      <Toaster position="top-center" />
       <Navbar />
       <div className="profile-container">
         <h2 className="profile-title">Your Profile</h2>
@@ -212,12 +210,20 @@ export default function Profile() {
               e.target.src = "/ProfileImg.png";
             }}
           />
-          <input
-            type="file"
-            id="photoInput"
-            onChange={handlePhotoChange}
-            disabled={!isEditing}
-          />
+
+          {isEditing && (
+            <div className="photo-upload-wrapper">
+              <label htmlFor="photoInput" className="upload-button">
+                Upload Photo
+              </label>
+              <input
+                type="file"
+                id="photoInput"
+                onChange={handlePhotoChange}
+                style={{ display: "none" }}
+              />
+            </div>
+          )}
         </div>
 
         <div className="profile-info">
@@ -289,13 +295,7 @@ export default function Profile() {
 
           <div className="button-group">
             <button
-              onClick={() => {
-                if (isEditing) {
-                  handleUpdate();
-                } else {
-                  setIsEditing(true);
-                }
-              }}
+              onClick={() => (isEditing ? handleUpdate() : setIsEditing(true))}
             >
               {isEditing ? "Save Changes" : "Edit"}
             </button>
@@ -332,7 +332,6 @@ export default function Profile() {
         </div>
       </div>
       <Footer />
-      <ToastContainer position="top-center" />
-    </div>
+    </>
   );
 }

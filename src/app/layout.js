@@ -1,6 +1,7 @@
 import "../styles/globals.css";
 import { ToastContainer } from "../components/toastifyData.jsx";
 import "react-toastify/dist/ReactToastify.css";
+import ClientOnlyInit from "./client-only-init";
 
 export const metadata = {
   title: "Create Next App",
@@ -11,8 +12,9 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className="antialiased">
+        <ClientOnlyInit /> 
         {children}
-        <ToastContainer position="top-right" autoClose={3000} />
+        <ToastContainer position="top-right" autoClose={1000} />
       </body>
     </html>
   );
