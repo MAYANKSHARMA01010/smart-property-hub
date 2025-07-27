@@ -1,17 +1,17 @@
 'use client';
 
 import React from 'react';
-import { useRouter } from 'next/navigation';
+// import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import '../styles/PropertyCard.css';
 import { Heart } from 'lucide-react';
 
 export default function PropertyCard({ property }) {
-  const router = useRouter();
+  // const router = useRouter();
 
-  const handleClick = () => {
-    router.push(`/property/${property.id}`);
-  };
+  // const handleClick = () => {
+  //   router.push(`/property/${property.id}`);
+  // };
 
   const handleWishlistClick = (e) => {
     e.stopPropagation();
@@ -21,7 +21,7 @@ export default function PropertyCard({ property }) {
   return (
     <div
       className="property-card"
-      onClick={handleClick}
+      // onClick={handleClick}
       role="button"
       tabIndex={0}
       onKeyDown={(e) => e.key === 'Enter' && handleClick()}
