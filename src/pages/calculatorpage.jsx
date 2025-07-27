@@ -1,7 +1,8 @@
 'use client';
+
 import React, { useState } from 'react';
-import Navbar from '@/components/Navbar.jsx';
-import Footer from '@/components/Footer.jsx';
+import Navbar from '../components/Navbar.jsx';
+import Footer from '../components/Footer.jsx';
 import '../styles/CalculatorPage.css';
 
 export default function CalculatorPage() {
