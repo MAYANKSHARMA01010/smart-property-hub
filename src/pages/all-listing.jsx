@@ -6,6 +6,7 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import PropertyCard from '../components/PropertyCard';
 import propertiesData from '../data/properties.json';
+import { Toaster } from 'react-hot-toast';
 
 export default function AllListing() {
   const [properties, setProperties] = useState([]);
@@ -103,6 +104,7 @@ export default function AllListing() {
 
   return (
     <div className="page">
+      <Toaster></Toaster>
       <Navbar />
 
       <div className="all-listing">

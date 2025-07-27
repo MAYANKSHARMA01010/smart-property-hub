@@ -4,6 +4,7 @@ import React from 'react';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import '../styles/PropertyCard.css';
+import { Heart } from 'lucide-react';
 
 export default function PropertyCard({ property }) {
   const router = useRouter();
@@ -13,8 +14,8 @@ export default function PropertyCard({ property }) {
   };
 
   const handleWishlistClick = (e) => {
-    e.stopPropagation(); // Prevent card click
-    toast('💖 Wishlist feature coming soon!');
+    e.stopPropagation();
+    toast.success('💖 Added to wishlist (feature will be added soon😅)');
   };
 
   return (
@@ -23,28 +24,42 @@ export default function PropertyCard({ property }) {
       onClick={handleClick}
       role="button"
       tabIndex={0}
-      onKeyPress={(e) => e.key === 'Enter' && handleClick()}
+      onKeyDown={(e) => e.key === 'Enter' && handleClick()}
     >
-      <img
-        src={property.image || '/images/default.jpg'}
-        alt={property.title}
-        className="property-image"
-        loading="lazy"
-      />
+      <div className="image-container">
+        <img
+          src={property.image || '/images/default.jpg'}
+          alt={property.title}
+          className="property-image"
+          loading="lazy"
+        />
+        <button
+          className="wishlist-button"
+          onClick={handleWishlistClick}
+          aria-label="Add to Wishlist"
+        >
+          <Heart size={18} /> Wishlist
+        </button>
+      </div>
+
       <div className="property-info">
-        <h3>{property.title}</h3>
-        <p className="city">{property.city}</p>
-        <p className="price">₹{property.price.toLocaleString()}</p>
-        <div className="tags">
-          {property.tags?.map((tag, i) => (
+        <h3 className="property-title">{property.title}</h3>
+        <p className="property-city">{property.city}</p>
+        <p className="property-price">₹{property.price.toLocaleString()}</p>
+
+        <div className="property-meta">
+          <span>{property.bedrooms} 🛏️</span>
+          <span>{property.bathrooms} 🛁</span>
+          <span>{property.sizeSqFt} sqft 📐</span>
+        </div>
+
+        <div className="tags-scroll">
+          {property.amenities?.slice(0, 5).map((tag, i) => (
             <span key={i} className="tag">
               {tag}
             </span>
           ))}
         </div>
-        <button className="wishlist-button" onClick={handleWishlistClick}>
-          ❤️ Add to Wishlist
-        </button>
       </div>
     </div>
   );

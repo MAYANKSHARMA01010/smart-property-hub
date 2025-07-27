@@ -1,6 +1,5 @@
 import "../styles/globals.css";
-import { ToastContainer } from "../components/toastifyData.jsx";
-import "react-toastify/dist/ReactToastify.css";
+import { Toaster } from 'react-hot-toast';
 import ClientOnlyInit from "./client-only-init";
 
 export const metadata = {
@@ -12,9 +11,18 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className="antialiased">
-        <ClientOnlyInit /> 
+        <ClientOnlyInit />
         {children}
-        <ToastContainer position="top-right" autoClose={1000} />
+        <Toaster
+          position="top-right"
+          toastOptions={{
+            duration: 2000,
+            style: {
+              background: '#333',
+              color: '#fff',
+            },
+          }}
+        />
       </body>
     </html>
   );
