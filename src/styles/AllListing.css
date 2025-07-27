@@ -82,6 +82,19 @@ body.dark {
   padding: 2rem;
 }
 
+.filters .ready-filter {
+  border: none;
+}
+
+.filters input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #3f51b5;
+}
+body.dark .filters input[type="checkbox"] {
+  accent-color: #90caf9;
+}
+
 .ready-filter {
   display: flex;
   align-items: center;
