@@ -216,3 +216,13 @@ body.dark .trending .property-grid {
 body.dark .section-heading {
   color: #ccc;
 }
+
+@media (max-width: 768px) {
+  .mini-calculator-right {
+    display: none;
+  }
+
+  .mini-calculator-left {
+    flex: 1 1 100%;
+  }
+}
