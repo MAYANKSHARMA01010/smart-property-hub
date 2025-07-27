@@ -12,9 +12,9 @@ import {
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import toast, { Toaster } from 'react-hot-toast';
 
-import { auth, db, storage } from '../lib/firebase';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
+import { auth, db, storage } from '../lib/firebase.js';
+import Navbar from '../components/Navbar.jsx';
+import Footer from '../components/Footer.jsx';
 import '../styles/profile.css';
 
 export default function Profile() {

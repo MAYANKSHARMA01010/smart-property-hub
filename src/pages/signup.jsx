@@ -5,12 +5,12 @@ import { useRouter } from "next/navigation";
 import {
   createUserWithEmailAndPassword,
 } from "firebase/auth";
-import { auth, db } from "../lib/firebase";
+import { auth, db } from "../lib/firebase.js";
 import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 import toast, { Toaster } from "react-hot-toast";
 import { FcGoogle } from "react-icons/fc";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
+import Navbar from "../components/Navbar.jsx";
+import Footer from "../components/Footer.jsx";
 import "../styles/signup.css";
 
 export default function SignupPage() {
