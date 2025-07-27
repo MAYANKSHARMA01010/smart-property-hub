@@ -1,23 +1,25 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import '../styles/AllListing.css';
+import React, { useState, useEffect, useCallback } from 'react';
+import Head from 'next/head';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import PropertyCard from '../components/PropertyCard';
 import propertiesData from '../data/properties.json';
 import { Toaster } from 'react-hot-toast';
+import '../styles/AllListing.css';
+
+const initialFilters = {
+  city: '',
+  type: '',
+  sort: '',
+  readyToMove: false,
+};
 
 export default function AllListing() {
   const [properties, setProperties] = useState([]);
   const [filtered, setFiltered] = useState([]);
-  const [filters, setFilters] = useState({
-    city: '',
-    type: '',
-    sort: '',
-    readyToMove: false,
-  });
-
+  const [filters, setFilters] = useState(initialFilters);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 30;
 
@@ -26,18 +28,12 @@ export default function AllListing() {
     setFiltered(propertiesData);
   }, []);
 
-  const handleFilterChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    const newValue = type === 'checkbox' ? checked : value;
-    setFilters({ ...filters, [name]: newValue });
-  };
-
-  const applyFilters = () => {
+  const applyFilters = useCallback(() => {
     let result = [...propertiesData];
 
     if (filters.city) result = result.filter(p => p.city === filters.city);
     if (filters.type) result = result.filter(p => p.propertyType === filters.type);
-    if (filters.readyToMove) result = result.filter(p => p.amenities?.includes("Ready to Move"));
+    if (filters.readyToMove) result = result.filter(p => p.amenities?.includes('Ready to Move'));
 
     switch (filters.sort) {
       case 'lowToHigh':
@@ -56,17 +52,20 @@ export default function AllListing() {
 
     setFiltered(result);
     setCurrentPage(1);
+  }, [filters]);
+
+  useEffect(() => {
+    applyFilters();
+  }, [filters, applyFilters]);
+
+  const handleFilterChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    const newValue = type === 'checkbox' ? checked : value;
+    setFilters(prev => ({ ...prev, [name]: newValue }));
   };
 
   const resetFilters = () => {
-    setFilters({
-      city: '',
-      type: '',
-      sort: '',
-      readyToMove: false,
-    });
-    setFiltered(propertiesData);
-    setCurrentPage(1);
+    setFilters(initialFilters);
   };
 
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -91,10 +90,7 @@ export default function AllListing() {
             {i}
           </button>
         );
-      } else if (
-        i === currentPage - 2 ||
-        i === currentPage + 2
-      ) {
+      } else if (i === currentPage - 2 || i === currentPage + 2) {
         pages.push(<span key={i}>...</span>);
       }
     }
@@ -103,73 +99,80 @@ export default function AllListing() {
   };
 
   return (
-    <div className="page">
-      <Toaster></Toaster>
-      <Navbar />
+    <>
+      <Head>
+        <title>All Properties | Smart Property Hub</title>
+      </Head>
 
-      <div className="all-listing">
-        <h1 className="title">All Property Listings</h1>
+      <div className="page">
+        <Toaster />
+        <Navbar />
 
-        {/* Filters */}
-        <div className="filters">
-          <select name="city" value={filters.city} onChange={handleFilterChange}>
-            <option value="">All Cities</option>
-            {[...new Set(properties.map(p => p.city))].map(city => (
-              <option key={city} value={city}>{city}</option>
-            ))}
-          </select>
+        <div className="all-listing">
+          <h1 className="title">All Property Listings</h1>
 
-          <select name="type" value={filters.type} onChange={handleFilterChange}>
-            <option value="">All Types</option>
-            {[...new Set(properties.map(p => p.propertyType))].map(type => (
-              <option key={type} value={type}>{type}</option>
-            ))}
-          </select>
+          {/* Filters */}
+          <div className="filters">
+            <select name="city" value={filters.city} onChange={handleFilterChange}>
+              <option value="">All Cities</option>
+              {[...new Set(properties.map(p => p.city))].map(city => (
+                <option key={city} value={city}>{city}</option>
+              ))}
+            </select>
 
-          <select name="sort" value={filters.sort} onChange={handleFilterChange}>
-            <option value="">Sort by</option>
-            <option value="AtoZ">Name: A to Z</option>
-            <option value="ZtoA">Name: Z to A</option>
-            <option value="lowToHigh">Price: Low to High</option>
-            <option value="highToLow">Price: High to Low</option>
-          </select>
+            <select name="type" value={filters.type} onChange={handleFilterChange}>
+              <option value="">All Types</option>
+              {[...new Set(properties.map(p => p.propertyType))].map(type => (
+                <option key={type} value={type}>{type}</option>
+              ))}
+            </select>
 
-          <label className="ready-filter">
-            <input
-              type="checkbox"
-              name="readyToMove"
-              checked={filters.readyToMove}
-              onChange={handleFilterChange}
-            />
-            Ready to Move
-          </label>
+            <select name="sort" value={filters.sort} onChange={handleFilterChange}>
+              <option value="">Sort by</option>
+              <option value="AtoZ">Name: A to Z</option>
+              <option value="ZtoA">Name: Z to A</option>
+              <option value="lowToHigh">Price: Low to High</option>
+              <option value="highToLow">Price: High to Low</option>
+            </select>
 
-          <button onClick={applyFilters}>Apply</button>
-          <button className="reset" onClick={resetFilters}>Reset</button>
+            <label className="ready-filter">
+              <input
+                type="checkbox"
+                name="readyToMove"
+                checked={filters.readyToMove}
+                onChange={handleFilterChange}
+              />
+              Ready to Move
+            </label>
+
+            <button className="reset" onClick={resetFilters}>Reset</button>
+          </div>
+
+          {/* Property Grid */}
+          <div className="property-grid">
+            {currentItems.length > 0 ? (
+              currentItems.map(property => (
+                <PropertyCard key={property.id} property={property} />
+              ))
+            ) : (
+              <p className="no-results">No properties match your filters.</p>
+            )}
+          </div>
+
+          {/* Pagination */}
+          <div className="pagination">
+            {currentPage > 1 && (
+              <button onClick={() => setCurrentPage(currentPage - 1)}>‹ Prev</button>
+            )}
+            {renderPagination()}
+            {currentPage < totalPages && (
+              <button onClick={() => setCurrentPage(currentPage + 1)}>Next ›</button>
+            )}
+          </div>
         </div>
 
-        {/* Properties Grid */}
-        <div className="property-grid">
-          {currentItems.length > 0 ? currentItems.map(property => (
-            <PropertyCard key={property.id} property={property} />
-          )) : (
-            <p className="no-results">No properties match your filters.</p>
-          )}
-        </div>
-
-        {/* Pagination */}
-        <div className="pagination">
-          {currentPage > 1 && (
-            <button onClick={() => setCurrentPage(currentPage - 1)}>‹ Prev</button>
-          )}
-          {renderPagination()}
-          {currentPage < totalPages && (
-            <button onClick={() => setCurrentPage(currentPage + 1)}>Next ›</button>
-          )}
-        </div>
+        <Footer />
       </div>
-
-      <Footer />
-    </div>
+    </>
   );
 }
