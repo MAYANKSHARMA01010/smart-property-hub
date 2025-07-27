@@ -3,8 +3,8 @@
 import React from 'react'
 import '../styles/about.css'
 
-import Footer from '@/components/Footer'
-import Navbar from '@/components/Navbar'
+import Footer from '../components/Footer.jsx'
+import Navbar from '../components/Navbar.jsx'
 
 function About() {
   return (
